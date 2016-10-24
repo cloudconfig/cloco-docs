@@ -689,7 +689,7 @@ object_id | The ID of the configuration object.
 environment_id | The ID of the environment.
 
 <aside class="notice">
-Requires subscription admin privilege or application admin privilege.
+Requires write permission as a configuration object user, else subscription admin privilege or application admin privilege.
 </aside>
 
 ## Retrieve Configuration Object
@@ -732,7 +732,7 @@ object_id | The ID of the configuration object.
 environment_id | The ID of the environment.
 
 <aside class="notice">
-Requires subscription admin privilege or application admin privilege.
+Requires read or write permission as a configuration object user, else subscription admin privilege or application admin privilege.
 </aside>
 
 ## Retrieve Configuration Object History
@@ -776,7 +776,7 @@ object_id | The ID of the configuration object.
 environment_id | The ID of the environment.
 
 <aside class="notice">
-Requires subscription admin privilege or application admin privilege.
+Requires read or write permission as a configuration object user, else subscription admin privilege or application admin privilege.
 </aside>
 
 ## Retrieve Previous Version
@@ -809,6 +809,20 @@ curl https://api.cloco.io/<subscription_id>/configuration/versions/<application_
 
 This command retrieves a previous version of your data.  The requested version must exist in the version history.
 
+### URL Parameters
+
+Parameter | Description
+--------- | -----------
+subscription_id | The ID of the subscription.
+application_id | The ID of the application.
+object_id | The ID of the configuration object.
+environment_id | The ID of the environment.
+version | The version number of the configuration object to roll back to.
+
+<aside class="notice">
+Requires read or write permission as a configuration object user, else subscription admin privilege or application admin privilege.
+</aside>
+
 ## Rollback to Previous Version
 
 > To rollback your configuration data to a previous version, use this code:
@@ -839,7 +853,7 @@ The version needs to exist in the version history.  cloco will read the version 
 </aside>
 
 <aside class="notice">
-Requires subscription admin privilege or application admin privilege.
+Requires write permission as a configuration object user, else subscription admin privilege or application admin privilege.
 </aside>
 
 ## List Configuration Object Users
