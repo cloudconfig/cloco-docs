@@ -3,7 +3,6 @@ title: cloco API reference
 
 language_tabs:
   - shell
-  - curl
 
 toc_footers:
   - <a href='https://www.cloco.io'>cloco.io</a>
@@ -65,9 +64,8 @@ Please see the [cloco website](https://www.cloco.io) for more information.
 ```shell
 # Use the --signup operation to sign up a user with an email address
 cloco --signup -u <email> -p <password>
-```
 
-```curl
+# Alternatively, use curl:
 curl -X POST https://api.cloco.io/signup  --data $json --header Content-Type:application/json
 ```
 
@@ -96,9 +94,8 @@ Your email address must be unique.
 ```shell
 # Use the --init operation to log in
 cloco --init -u <email> -p <password>
-```
 
-```curl
+# Alternatively, use curl:
 curl -X POST -u <email>:<password> https://api.cloco.io/login  --header Content-Type:application/json
 ```
 
@@ -110,9 +107,8 @@ cloco uses Oauth2 bearer tokens to authenticate on the API, and so you first nee
 
 ```shell
 cloco --me
-```
 
-```curl
+# Alternatively, use curl:
 curl https://api.cloco.io/me  --header Content-Type:application/json --header "Authorization:Bearer <token>"
 ```
 
@@ -128,9 +124,8 @@ In cloco a subscription is where a team of people can manage configuration data 
 
 ```shell
 cloco --list-subs
-```
 
-```curl
+# Alternatively, use curl:
 curl https://api.cloco.io  --header Content-Type:application/json --header "Authorization:Bearer <token>"
 ```
 
@@ -151,9 +146,8 @@ As a user in cloco you can belong to more than one subscription.  If you are a s
 
 ```shell
 cloco --create-sub --sub <subscription_id>
-```
 
-```curl
+# Alternatively, use curl:
 curl -X POST https://api.cloco.io/subscription --data $json --header Content-Type:application/json --header "Authorization:Bearer <token>"
 ```
 
@@ -181,9 +175,8 @@ When you create a subscription you will by default be the only user and the subs
 
 ```shell
 cloco --get-sub --sub <subscription_id>
-```
 
-```curl
+# Alternatively, use curl:
 curl https://api.cloco.io/<subscription_id> --header Content-Type:application/json --header "Authorization:Bearer <token>"
 ```
 
@@ -205,9 +198,8 @@ Requires subscription admin privilege.
 
 ```shell
 cloco --list-users --sub <subscription_id>
-```
 
-```curl
+# Alternatively, use curl:
 curl https://api.cloco.io/<subscription_id>/users --header Content-Type:application/json --header "Authorization:Bearer <token>"
 ```
 
@@ -239,10 +231,9 @@ Requires subscription admin privilege.
 > To add subscription user, use this code:
 
 ```shell
-cloco --add-user --sub <subscription_id> -u <email>
-```
+cloco --add-user --sub <subscription_id> -u <email> -r admin|user
 
-```curl
+# Alternatively, use curl:
 curl -X POST --data $json https://api.cloco.io/<subscription_id>/users --header Content-Type:application/json --header "Authorization:Bearer <token>"
 ```
 
@@ -256,6 +247,8 @@ curl -X POST --data $json https://api.cloco.io/<subscription_id>/users --header 
 ```
 
 This command lets you add a cloco user to the subscription via their email address.  Once the user signs into cloco they will see the subscription in their list of available subscriptions and will be able to use cloco with the required level of privilege.
+
+A user needs to be added to the subscription before they can be granted permissions on either an application or a configuration object.
 
 ### URL Parameters
 
@@ -273,9 +266,8 @@ Requires subscription admin privilege.
 
 ```shell
 cloco --rm-user --sub <subscription_id> -u <email>
-```
 
-```curl
+# Alternatively, use curl:
 curl -X DELETE --data $json https://api.cloco.io/<subscription_id>/users/<email> --header Content-Type:application/json --header "Authorization:Bearer <token>"
 ```
 
@@ -306,9 +298,8 @@ Within cloco the data stored for an application is metadata - this helps us mana
 
 ```shell
 cloco --list-apps --sub <subscription_id>
-```
 
-```curl
+# Alternatively, use curl:
 curl https://api.cloco.io/<subscription_id>/applications  --header Content-Type:application/json --header "Authorization:Bearer <token>"
 ```
 
@@ -361,9 +352,8 @@ Requires subscription admin privilege.
 
 ```shell
 cloco --save-app --sub <subscription_id> --app <application_id> --file <path_to_json_file>
-```
 
-```curl
+# Alternatively, use curl:
 curl -X PUT --data @<path_to_json_file> https://api.cloco.io/<subscription_id>/applications/<application_id> --header Content-Type:application/json --header "Authorization:Bearer <token>"
 ```
 
@@ -407,7 +397,7 @@ Note that subscription limits on number of applications, number of configuration
 Parameter | Description
 --------- | -----------
 subscription_id | The ID of the subscription.
-application_id | The ID of the subscription.
+application_id | The ID of the application.
 
 <aside class="notice">
 Requires subscription admin privilege.
@@ -419,10 +409,38 @@ Requires subscription admin privilege.
 
 ```shell
 cloco --get-app --sub <subscription_id> --app <application_id>
+
+# Alternatively, use curl:
+curl https://api.cloco.io/<subscription_id>/applications/<application_id> --header Content-Type:application/json --header "Authorization:Bearer <token>"
 ```
 
-```curl
-curl https://api.cloco.io/<subscription_id>/applications/<application_id> --header Content-Type:application/json --header "Authorization:Bearer <token>"
+> The above command returns JSON structured like this:
+
+```json
+{
+  "applicationIdentifier": "<application_id>",
+  "coreDetails": {
+    "applicationName": "My-App",
+    "description": "This is a description of my app.",
+    "isDefault": "true|false"
+  },
+  "environments": [
+    {
+      "environmentIdentifier": "dev",
+      "environmentName": "Development",
+      "description": "Development Environment",
+      "isDefault:": "false"
+    }
+  ],
+  "configObjects": [
+    {
+      "objectIdentifier": "My-Config-Object",
+      "objectName": "My Config Object",
+      "description": "This is a an example configuration object.",
+      "format": "JSON"
+    }
+  ]
+}
 ```
 
 This command retrieves the application information.
@@ -432,7 +450,7 @@ This command retrieves the application information.
 Parameter | Description
 --------- | -----------
 subscription_id | The ID of the subscription.
-application_id | The ID of the subscription.
+application_id | The ID of the application.
 
 <aside class="notice">
 Requires subscription admin privilege or application admin privilege.
@@ -444,9 +462,8 @@ Requires subscription admin privilege or application admin privilege.
 
 ```shell
 cloco --rm-app --sub <subscription_id> --app <application_id>
-```
 
-```curl
+# Alternatively, use curl:
 curl -X DELETE https://api.cloco.io/<subscription_id>/applications/<application_id> --header Content-Type:application/json --header "Authorization:Bearer <token>"
 ```
 
@@ -457,7 +474,7 @@ This command deletes the application and any associated configuration stored wit
 Parameter | Description
 --------- | -----------
 subscription_id | The ID of the subscription.
-application_id | The ID of the subscription.
+application_id | The ID of the application.
 
 <aside class="notice">
 Requires subscription admin privilege or application admin privilege.
@@ -469,9 +486,8 @@ Requires subscription admin privilege or application admin privilege.
 
 ```shell
 cloco --list-app-users --sub <subscription_id> --app <application_id>
-```
 
-```curl
+# Alternatively, use curl:
 curl https://api.cloco.io/<subscription_id>/applications/<application_id>/users --header Content-Type:application/json --header "Authorization:Bearer <token>"
 ```
 
@@ -486,14 +502,14 @@ curl https://api.cloco.io/<subscription_id>/applications/<application_id>/users 
 ]
 ```
 
-This command lets you list all of the users that are present in the subscription.
+This command lets you list all of the users that are presently assigned to the application.
 
 ### URL Parameters
 
 Parameter | Description
 --------- | -----------
 subscription_id | The ID of the subscription.
-application_id | The ID of the subscription.
+application_id | The ID of the application.
 
 <aside class="notice">
 Requires subscription admin privilege or application admin privilege.
@@ -505,9 +521,8 @@ Requires subscription admin privilege or application admin privilege.
 
 ```shell
 cloco --add-app-user --sub <subscription_id> --app <application_id> -u <email>
-```
 
-```curl
+# Alternatively, use curl:
 curl -X POST --data $json https://api.cloco.io/<subscription_id>/applications/<application_id>/users --header Content-Type:application/json --header "Authorization:Bearer <token>"
 ```
 
@@ -527,7 +542,7 @@ This command lets you add a cloco user to the application via their email addres
 Parameter | Description
 --------- | -----------
 subscription_id | The ID of the subscription.
-application_id | The ID of the subscription.
+application_id | The ID of the application.
 
 <aside class="notice">
 Requires subscription admin privilege or application admin privilege.
@@ -539,9 +554,8 @@ Requires subscription admin privilege or application admin privilege.
 
 ```shell
 cloco --rm-app-user --sub <subscription_id> --app <application_id> -u <email>
-```
 
-```curl
+# Alternatively, use curl:
 curl -X DELETE --data $json https://api.cloco.io/<subscription_id>/applications/<application_id>/users/<email> --header Content-Type:application/json --header "Authorization:Bearer <token>"
 ```
 
@@ -552,7 +566,7 @@ This command lets you remove a cloco user from the application via their email a
 Parameter | Description
 --------- | -----------
 subscription_id | The ID of the subscription.
-application_id | The ID of the subscription.
+application_id | The ID of the application.
 email | The identity email of the user to remove.
 
 <aside class="warning">
@@ -563,39 +577,377 @@ You cannot remove yourself from the application.  If you want to do this you mus
 Requires subscription admin privilege or application admin privilege.
 </aside>
 
-
-
 # Configuration Objects
 
-## General Configuration Object Management
+When you work with configuration objects in the cloco API, you are storing or retrieving configuration data.  This is where you will set the configuration that your applications will consume, or your applications will use these operations to retrieve their configuration.
 
-### List Configuration Objects in Subscription
+## List Configuration Objects in Subscription
+
+> To list the configuration objects within a subscription, use this code:
+
+```shell
+cloco --list-cobs --sub <subscription_id>
+
+# Alternatively, use curl:
+curl https://api.cloco.io/<subscription_id>/configuration  --header Content-Type:application/json --header "Authorization:Bearer <token>"
+```
+
+> The above command returns JSON structured like this:
+
+```json
+[
+  {
+      "objectIdentifier":"<object_id>",
+      "environmentIdentifier":"<environment_id>",
+      "applicationIdentifier":"<application_id>",
+      "lastUpdated":"2016-10-24T15:19:36.668Z",
+      "lastUpdatedBy":"some@user.com",
+      "versionNote":"Saved via API.",
+      "created":"2016-10-24T15:19:27.695Z",
+      "createdBy":"some@user.com",
+      "revisionNumber":2
+    }
+]
+```
+
+This command retrieves the headers (but not the configuration data) of all of the configuration objects saved in the subscription.
+
+### URL Parameters
+
+Parameter | Description
+--------- | -----------
+subscription_id | The ID of the subscription.
+
+<aside class="notice">
+Requires subscription admin privilege.
+</aside>
+
+## List Configuration Objects in Application
+
+> To list the configuration objects within an application, use this code:
+
+```shell
+cloco --list-app-cobs --sub <subscription_id> --app <application_id>
+
+# Alternatively, use curl:
+curl https://api.cloco.io/<subscription_id>/configuration/<application_id>  --header Content-Type:application/json --header "Authorization:Bearer <token>"
+```
+
+> The above command returns JSON structured like this:
+
+```json
+[
+  {
+      "objectIdentifier":"<object_id>",
+      "environmentIdentifier":"<environment_id>",
+      "applicationIdentifier":"<application_id>",
+      "lastUpdated":"2016-10-24T15:19:36.668Z",
+      "lastUpdatedBy":"some@user.com",
+      "versionNote":"Saved via API.",
+      "created":"2016-10-24T15:19:27.695Z",
+      "createdBy":"some@user.com",
+      "revisionNumber":2
+    }
+]
+```
+
+This command retrieves the headers (but not the configuration data) of all of the configuration objects saved in the application.
+
+### URL Parameters
+
+Parameter | Description
+--------- | -----------
+subscription_id | The ID of the subscription.
+application_id | The ID of the application.
+
+<aside class="notice">
+Requires subscription admin privilege or application admin privilege.
+</aside>
+
+## Save Configuration Data
+
+> To save configuration data, use this code:
+
+```shell
+cloco --get-app --sub <subscription_id> --cob <application_id>/<object_id>/<environment_id> --file <path_to_data_file>
+
+# Alternatively, use curl:
+curl -X PUT --data @<path_to_data_file> https://api.cloco.io/<subscription_id>/configuration/<application_id>/<object_id>/<environment_id> --header Content-Type:application/json --header "Authorization:Bearer <token>"
+```
+
+> The above command does not require the data to be structured, but it will try to parse it as JSON.
+
+This command saves the configuration data within cloco.  We recommend that you encrypt your data before sending it to cloco, and so we expect that we receive will be a base-64 encoded string of encrypted binary.  You can send data in the clear if you wish, for exampe if the data is public-access, and we will parse it as JSON.
+
+### URL Parameters
+
+Parameter | Description
+--------- | -----------
+subscription_id | The ID of the subscription.
+application_id | The ID of the application.
+object_id | The ID of the configuration object.
+environment_id | The ID of the environment.
+
+<aside class="notice">
+Requires subscription admin privilege or application admin privilege.
+</aside>
+
+## Retrieve Configuration Object
+
+> To retrieve configuration data, use this code:
+
+```shell
+cloco --get-cob --sub <subscription_id> --cob <application_id>/<object_id>/<environment_id>
+
+# Alternatively, use curl:
+curl https://api.cloco.io/<subscription_id>/configuration/<application_id>/<object_id>/<environment_id> --header Content-Type:application/json --header "Authorization:Bearer <token>"
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+    "objectIdentifier":"<object_id>",
+    "environmentIdentifier":"<environment_id>",
+    "applicationIdentifier":"<application_id>",
+    "lastUpdated":"2016-10-24T15:19:36.668Z",
+    "lastUpdatedBy":"some@user.com",
+    "versionNote":"Saved via API.",
+    "created":"2016-10-24T15:19:27.695Z",
+    "createdBy":"some@user.com",
+    "revisionNumber":2,
+    "configurationData":"SOME-BASE64-ENCODED-STRING"
+  }
+```
+
+This command retrieves the configuration object, wrapper in the metadata.  Note that if the configuration data is encrypted then it will be returned as a base-64 encoded string within the object.
+
+### URL Parameters
+
+Parameter | Description
+--------- | -----------
+subscription_id | The ID of the subscription.
+application_id | The ID of the application.
+object_id | The ID of the configuration object.
+environment_id | The ID of the environment.
+
+<aside class="notice">
+Requires subscription admin privilege or application admin privilege.
+</aside>
+
+## Retrieve Configuration Object History
+
+> To list the versions of your configuration object, use this code:
+
+```shell
+cloco --get-history --sub <subscription_id> --cob <application_id>/<object_id>/<environment_id>
+
+# Alternatively, use curl:
+curl https://api.cloco.io/<subscription_id>/configuration/versions/<application_id>/<object_id>/<environment_id>  --header Content-Type:application/json --header "Authorization:Bearer <token>"
+```
+
+> The above command returns JSON structured like this:
+
+```json
+[
+  {
+      "objectIdentifier":"<object_id>",
+      "environmentIdentifier":"<environment_id>",
+      "applicationIdentifier":"<application_id>",
+      "lastUpdated":"2016-10-24T15:19:36.668Z",
+      "lastUpdatedBy":"some@user.com",
+      "versionNote":"Saved via API.",
+      "created":"2016-10-24T15:19:27.695Z",
+      "createdBy":"some@user.com",
+      "revisionNumber":2
+    }
+]
+```
+
+This command retrieves the headers (but not the configuration data) of the configuration object.  The data retrieved will be truncated to the maximum stored history versions supported by your subscription level.  
+
+### URL Parameters
+
+Parameter | Description
+--------- | -----------
+subscription_id | The ID of the subscription.
+application_id | The ID of the application.
+object_id | The ID of the configuration object.
+environment_id | The ID of the environment.
+
+<aside class="notice">
+Requires subscription admin privilege or application admin privilege.
+</aside>
+
+## Retrieve Previous Version
+
+> To retrieve a previous version of your configuration data, use this code:
+
+```shell
+cloco --get-version --sub <subscription_id> --cob <application_id>/<object_id>/<environment_id> ---version <version>
+
+# Alternatively, use curl:
+curl https://api.cloco.io/<subscription_id>/configuration/versions/<application_id>/<object_id>/<environment_id>/<version> --header Content-Type:application/json --header "Authorization:Bearer <token>"
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+    "objectIdentifier":"<object_id>",
+    "environmentIdentifier":"<environment_id>",
+    "applicationIdentifier":"<application_id>",
+    "lastUpdated":"2016-10-24T15:19:36.668Z",
+    "lastUpdatedBy":"some@user.com",
+    "versionNote":"Saved via API.",
+    "created":"2016-10-24T15:19:27.695Z",
+    "createdBy":"some@user.com",
+    "revisionNumber":2,
+    "configurationData":"SOME-BASE64-ENCODED-STRING"
+  }
+```
+
+This command retrieves a previous version of your data.  The requested version must exist in the version history.
+
+## Rollback to Previous Version
+
+> To rollback your configuration data to a previous version, use this code:
+
+```shell
+cloco --restore-version --sub <subscription_id> --cob <application_id>/<object_id>/<environment_id> ---version <version>
+
+# Alternatively, use curl:
+curl -X PUT https://api.cloco.io/<subscription_id>/configuration/versions/<application_id>/<object_id>/<environment_id>/<version> --header Content-Type:application/json --header "Authorization:Bearer <token>"
+```
+
+> The above command does not require any data to be posted in the request body.
+
+This command rolls back your data to a previous version.  The previous history will still be maintained, and a new entry will be inserted into the history to represent the rollback.
+
+### URL Parameters
+
+Parameter | Description
+--------- | -----------
+subscription_id | The ID of the subscription.
+application_id | The ID of the application.
+object_id | The ID of the configuration object.
+environment_id | The ID of the environment.
+version | The version number of the configuration object to roll back to.
+
+<aside class="warning">
+The version needs to exist in the version history.  cloco will read the version and create a new version in the history using the data of the previous version.
+</aside>
+
+<aside class="notice">
+Requires subscription admin privilege or application admin privilege.
+</aside>
+
+## List Configuration Object Users
+
+> To list the configuration object users, use this code:
+
+```shell
+cloco --list-cob-users --sub <subscription_id> --cob <application_id>/<object_id>/<environment_id>
+
+# Alternatively, use curl:
+curl https://api.cloco.io/<subscription_id>/configuration/<application_id>/<object_id>/<environment_id>/users --header Content-Type:application/json --header "Authorization:Bearer <token>"
+```
+
+> The above command returns JSON array structured like this:
+
+```json
+[
+  {
+    "identity": "<email>",
+    "permissionLevel": "admin|user"
+  }
+]
+```
+
+This command lets you list all of the users that are presently assigned to the configuration object.
+
+### URL Parameters
+
+Parameter | Description
+--------- | -----------
+subscription_id | The ID of the subscription.
+application_id | The ID of the application.
+object_id | The ID of the configuration object.
+environment_id | The ID of the environment.
+
+<aside class="notice">
+Requires subscription admin privilege or application admin privilege.
+</aside>
 
 
-### List Configuration Objects in Application
+## Add Configuration Object User
+
+> To add a configuration object user, use this code:
+
+```shell
+cloco --add-cob-user --sub <subscription_id> --cob <application_id>/<object_id>/<environment_id> -u <email> -r "read|write"
+
+# Alternatively, use curl:
+curl -X POST --data $json https://api.cloco.io/<subscription_id>/configuration/<application_id>/<object_id>/<environment_id>/users/<email> --header Content-Type:application/json --header "Authorization:Bearer <token>"
+```
+
+> The above command requires JSON structured like this:
+
+```json
+{
+  "identity": "<email>",
+  "permissionLevel": "admin|user"
+}
+```
+
+This command lets you add a cloco user to the configuration object via their email address.  Note that this applies to a single configuration object in a single application, referencing a single application.
+
+### URL Parameters
+
+Parameter | Description
+--------- | -----------
+subscription_id | The ID of the subscription.
+application_id | The ID of the application.
+object_id | The ID of the configuration object.
+environment_id | The ID of the environment.
+email | The identity email of the user to remove.
+
+<aside class="warning">
+You cannot remove yourself from the configuration object.  If you want to do this you must first ensure another admin is present within the application and then get them to remove you.
+</aside>
+
+<aside class="notice">
+Requires subscription admin privilege or application admin privilege.
+</aside>
 
 
-### Store Configuration Object
+## Remove Configuration Object User
 
+> To remove a configuration object user, use this code:
 
-### Retrieve Configuration Object
+```shell
+cloco --rm-cob-user --sub <subscription_id> --cob <application_id>/<object_id>/<environment_id> -u <email>
 
+# Alternatively, use curl:
+curl -X DELETE --data $json https://api.cloco.io/<subscription_id>/configuration/<application_id>/<object_id>/<environment_id>/users/<email> --header Content-Type:application/json --header "Authorization:Bearer <token>"
+```
 
-## Version History
+This command lets you remove a cloco user from the configuration object via their email address.  Note that this applies to a single configuration object in a single application, referencing a single application.
 
+### URL Parameters
 
-### Retrieve Configuration Object History
+Parameter | Description
+--------- | -----------
+subscription_id | The ID of the subscription.
+application_id | The ID of the application.
+object_id | The ID of the configuration object.
+environment_id | The ID of the environment.
+email | The identity email of the user to remove.
 
+<aside class="warning">
+You cannot remove yourself from the configuration object.  If you want to do this you must first ensure another admin is present within the application and then get them to remove you.
+</aside>
 
-### Rollback to Previous Version
-
-
-## Working with Configuration Object Users
-
-### List Configuration Object Users
-
-
-### Add Configuration Object User
-
-
-### Remove Configuration Object User
+<aside class="notice">
+Requires subscription admin privilege or application admin privilege.
+</aside>
