@@ -46,4 +46,4 @@ If you'd prefer to use Docker, instructions are available [in the Slate wiki](ht
 
 Now that you've forked our cloco-docs repo, you can make your changes locally and then submit a PR to get your changed merged back into the cloco codebase.  
 
-[Submit an issue](https://github.com/cloud-config/cloco-docs/issues) to the cloco-docs GitHub if you need any help. And, of course, feel free to submit pull requests with bug fixes or changes.
+[Submit an issue](https://github.com/cloudconfig/cloco-docs/issues) to the cloco-docs GitHub if you need any help. And, of course, feel free to submit pull requests with bug fixes or changes.
