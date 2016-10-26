@@ -7,10 +7,12 @@ We are keen to build clients to allow easier interaction with cloco more languag
 
 The cloco client libraries are all available on [GitHub](https://github.com/cloudconfig).
 
+This documentation is based on [Slate](https://github.com/lord/slate), and more information on how to work with the documentation can be found there.
+
 Getting Started with cloco-docs
 ------------------------------
 
-## Prerequisites
+### Prerequisites
 
 You're going to need:
 
@@ -18,7 +20,7 @@ You're going to need:
  - **Ruby, version 2.0 or newer**
  - **Bundler** — If Ruby is already installed, but the `bundle` command doesn't work, just run `gem install bundler` in a terminal.
 
-## Getting Set Up
+### Getting Set Up
 
 1. Fork this repository on Github.
 2. Clone *your forked repository* (not our original one) to your hard drive with `git clone https://github.com/YOURUSERNAME/slate.git`
@@ -40,8 +42,7 @@ Now that Slate is all set up on your machine, you'll probably want to learn more
 
 If you'd prefer to use Docker, instructions are available [in the Slate wiki](https://github.com/lord/slate/wiki/Docker).
 
-Need Help? Found a bug?
---------------------
+### Contributing
 
 Now that you've forked our cloco-docs repo, you can make your changes locally and then submit a PR to get your changed merged back into the cloco codebase.  
 
