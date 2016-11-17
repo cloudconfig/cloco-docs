@@ -1,3 +1,5 @@
+<img src="https://raw.githubusercontent.com/cloudconfig/cloco-docs/master/source/images/logo.png" style="width: 100px; height: 104px; marging-left: auto; margin-right: auto; display: block;" />
+
 cloco-docs
 ------------------------------
 
