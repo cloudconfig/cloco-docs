@@ -55,51 +55,40 @@ We want you to use cloco for your apps.  We want to encourage take-up of cloco, 
 
 Please see the [cloco website](https://www.cloco.io) for more information.
 
+# Installation
+
+## cloco-auth
+
+The utility for authorizing your machine to use cloco is available at [https://github.com/cloudconfig/cloco-auth](https://github.com/cloudconfig/cloco-auth).  Follow the instructions in the README to authentcate and get your machine authorized.
+
+## cloco-bash
+
+The bash utility for cloco is available at [https://github.com/cloudconfig/cloco-bash](https://github.com/cloudconfig/cloco-bash).  Follow the instructions in the README to download and install the utility.
+
 # User Accounts
 
 ## Signup
 
-> To sign up, use this code:
+The registration process for cloco is very easy.  Sign into cloco with GitHub and authorize cloco to read your GitHub profile.  We'll use this to create a user account and a subscription in cloco with the same name as your GitHub username.  
 
-```shell
-# Use the --signup operation to sign up a user with an email address
-cloco --signup -u <email> -p <password>
-
-# Alternatively, use curl:
-curl -X POST https://api.cloco.io/signup  --data $json --header Content-Type:application/json
-```
-
-> The above command requires JSON structured like this:
-
-```json
-{
-  "username": "<username>",
-  "email": "<email>",
-  "password": "<password>"
-}
-```
-
-To use cloco you must first create a user account to allow us to authenticate.  You need to supply an email address and a password, and your email will become your user identity within cloco.
-
-If you're using the raw API you can optionally specify a username.
+You can log in or sign up for cloco from the cloco website [https://www.cloco.io](https://www.cloco.io) or use the cloco-auth utility.
 
 <aside class="warning">
-Your email address must be unique.
+Currently we only support GitHub login.
 </aside>
 
 ## Authentication
 
-> To authenticate, use this code:
+> To refresh your credentials:
 
 ```shell
 # Use the --init operation to log in
-cloco --init -u <email> -p <password>
-
-# Alternatively, use curl:
-curl -X POST -u <email>:<password> https://api.cloco.io/login  --header Content-Type:application/json
+cloco --refresh-login
 ```
 
-cloco uses Oauth2 bearer tokens to authenticate on the API, and so you first need to retrieve your bearer token via the /login route.
+cloco uses Oauth2 bearer tokens to authenticate on the API, and so you first need to retrieve your bearer token using the cloco-auth application.  This is a small and lightweight utility that allows you to authorize your machine using your GitHub credentials.
+
+Once you have authenticated you'll need to ensure your credentials are refreshed at the start of each session.  Some of the cloco clients may do this for you.
 
 ## My Details
 
