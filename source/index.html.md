@@ -21,7 +21,7 @@ Welcome to the cloco configuration-as-a-service API.
 
 *cloco* allows developers to build and configure their cloud apps using a configuration API.  The separation of configuration from code is a great first step into building 12-factor applications ([see 12factor.net](http://12factor.net)) and allows you to build a upon rich configuration that's easy to manage via our API.  You can make changes and update your configuration separately from your deployment lifecycle.
 
-This example API documentation page was created with [Slate](https://github.com/tripit/slate) and the documentation source is available on [GitHub](https://cloudconfig/cloco-docs).  If you find any inaccuracies or omissions please join the project and raise a PR.
+This example API documentation page was created with [Slate](https://github.com/lord/slate) and the documentation source is available on [GitHub](https://cloudconfig/cloco-docs).  If you find any inaccuracies or omissions please join the project and raise a PR.
 
 ## Concepts
 
