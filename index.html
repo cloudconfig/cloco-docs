@@ -170,6 +170,59 @@
 
 <p>The bash utility for cloco is available at <a href="https://github.com/cloudconfig/cloco-bash">https://github.com/cloudconfig/cloco-bash</a>.  Follow the instructions in the README to download and install the utility.</p>
 
+<h2 id="setting-defaults">Setting Defaults</h2>
+
+<blockquote>
+<p>To set default subscription, application, environment, API URL:</p>
+</blockquote>
+<pre class="highlight shell"><code><span class="c"># To set the default subscription</span>
+cloco --init --sub &lt;subscription_id&gt;
+
+<span class="c"># To set the default application</span>
+cloco --init --app &lt;application_id&gt;
+
+<span class="c"># To set the default environment</span>
+cloco --init --env &lt;environment_id&gt;
+
+<span class="c"># To set the default API URL (for on-premise istallations):</span>
+cloco --init --url &lt;api url&gt;
+</code></pre>
+
+<p>Using the cloco bash script you can set defaults for subscription, application, environment, and for use with on-premise installs of cloco, the API URL.### URL Parameters</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Usage</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>subscription_id</td>
+<td>The ID of the subscription.</td>
+<td>Optional.</td>
+</tr>
+<tr>
+<td>application_id</td>
+<td>The ID of the application.</td>
+<td>Optional.</td>
+</tr>
+<tr>
+<td>environment_id</td>
+<td>The ID of the environment.</td>
+<td>Optional.</td>
+</tr>
+<tr>
+<td>url</td>
+<td>The cloco API url.</td>
+<td>Optional.  Will default to the public hosted cloco API.</td>
+</tr>
+</tbody></table>
+
+<aside class="notice">
+Note that these are saved against the logged on user&rsquo;s profile, so if you are initializing for an application you will need to execute these using the same user as the application will run under.
+</aside>
+
 <h1 id="user-accounts">User Accounts</h1>
 
 <h2 id="signup">Signup</h2>
@@ -187,8 +240,7 @@ Currently we only support GitHub login.
 <blockquote>
 <p>To refresh your credentials:</p>
 </blockquote>
-<pre class="highlight shell"><code><span class="c"># Use the --init operation to log in</span>
-cloco --refresh-login
+<pre class="highlight shell"><code>cloco --refresh-login
 </code></pre>
 
 <p>cloco uses Oauth2 bearer tokens to authenticate on the API, and so you first need to retrieve your bearer token using the cloco-auth application.  This is a small and lightweight utility that allows you to authorize your machine using your GitHub credentials.</p>
@@ -282,11 +334,13 @@ curl https://api.cloco.io/&lt;subscription_id&gt; --header Content-Type:applicat
 <tr>
 <th>Parameter</th>
 <th>Description</th>
+<th>Usage</th>
 </tr>
 </thead><tbody>
 <tr>
 <td>subscription_id</td>
 <td>The ID of the subscription.</td>
+<td>Optional if defaulted via the &ndash;init command</td>
 </tr>
 </tbody></table>
 
@@ -310,7 +364,7 @@ curl https://api.cloco.io/&lt;subscription_id&gt;/users --header Content-Type:ap
 </blockquote>
 <pre class="highlight json"><code><span class="p">[</span><span class="w">
   </span><span class="p">{</span><span class="w">
-    </span><span class="nt">"identity"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;email&gt;"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"identity"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;username&gt;"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"permissionLevel"</span><span class="p">:</span><span class="w"> </span><span class="s2">"admin|user"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">]</span><span class="w">
@@ -324,11 +378,13 @@ curl https://api.cloco.io/&lt;subscription_id&gt;/users --header Content-Type:ap
 <tr>
 <th>Parameter</th>
 <th>Description</th>
+<th>Usage</th>
 </tr>
 </thead><tbody>
 <tr>
 <td>subscription_id</td>
 <td>The ID of the subscription.</td>
+<td>Optional if defaulted via the &ndash;init command</td>
 </tr>
 </tbody></table>
 
@@ -341,7 +397,7 @@ Requires subscription admin privilege.
 <blockquote>
 <p>To add subscription user, use this code:</p>
 </blockquote>
-<pre class="highlight shell"><code>cloco --add-user --sub &lt;subscription_id&gt; -u &lt;email&gt; -r admin|user
+<pre class="highlight shell"><code>cloco --add-user --sub &lt;subscription_id&gt; -u &lt;username&gt; -r admin|user
 
 <span class="c"># Alternatively, use curl:</span>
 curl -X POST --data <span class="nv">$json</span> https://api.cloco.io/&lt;subscription_id&gt;/users --header Content-Type:application/json --header <span class="s2">"Authorization:Bearer &lt;token&gt;"</span>
@@ -351,12 +407,12 @@ curl -X POST --data <span class="nv">$json</span> https://api.cloco.io/&lt;subsc
 <p>The above command requires JSON structured like this:</p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="nt">"identity"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;email&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"identity"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;username&gt;"</span><span class="p">,</span><span class="w">
   </span><span class="nt">"permissionLevel"</span><span class="p">:</span><span class="w"> </span><span class="s2">"admin|user"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 
-<p>This command lets you add a cloco user to the subscription via their email address.  Once the user signs into cloco they will see the subscription in their list of available subscriptions and will be able to use cloco with the required level of privilege.</p>
+<p>This command lets you add a cloco user to the subscription via their username.  Once the user signs into cloco they will see the subscription in their list of available subscriptions and will be able to use cloco with the required level of privilege.</p>
 
 <p>A user needs to be added to the subscription before they can be granted permissions on either an application or a configuration object.</p>
 
@@ -366,11 +422,13 @@ curl -X POST --data <span class="nv">$json</span> https://api.cloco.io/&lt;subsc
 <tr>
 <th>Parameter</th>
 <th>Description</th>
+<th>Usage</th>
 </tr>
 </thead><tbody>
 <tr>
 <td>subscription_id</td>
 <td>The ID of the subscription.</td>
+<td>Optional if defaulted via the &ndash;init command</td>
 </tr>
 </tbody></table>
 
@@ -383,13 +441,13 @@ Requires subscription admin privilege.
 <blockquote>
 <p>To remove a subscription user, use this code:</p>
 </blockquote>
-<pre class="highlight shell"><code>cloco --rm-user --sub &lt;subscription_id&gt; -u &lt;email&gt;
+<pre class="highlight shell"><code>cloco --rm-user --sub &lt;subscription_id&gt; -u &lt;username&gt;
 
 <span class="c"># Alternatively, use curl:</span>
-curl -X DELETE --data <span class="nv">$json</span> https://api.cloco.io/&lt;subscription_id&gt;/users/&lt;email&gt; --header Content-Type:application/json --header <span class="s2">"Authorization:Bearer &lt;token&gt;"</span>
+curl -X DELETE --data <span class="nv">$json</span> https://api.cloco.io/&lt;subscription_id&gt;/users/&lt;username&gt; --header Content-Type:application/json --header <span class="s2">"Authorization:Bearer &lt;token&gt;"</span>
 </code></pre>
 
-<p>This command lets you remove a cloco user from the subscription via their email address.  </p>
+<p>This command lets you remove a cloco user from the subscription via their username.  </p>
 
 <h3 id="url-parameters">URL Parameters</h3>
 
@@ -397,15 +455,18 @@ curl -X DELETE --data <span class="nv">$json</span> https://api.cloco.io/&lt;sub
 <tr>
 <th>Parameter</th>
 <th>Description</th>
+<th>Usage</th>
 </tr>
 </thead><tbody>
 <tr>
 <td>subscription_id</td>
 <td>The ID of the subscription.</td>
+<td>Optional if defaulted via the &ndash;init command</td>
 </tr>
 <tr>
-<td>email</td>
-<td>The identity email of the user to remove.</td>
+<td>username</td>
+<td>The identity of the user to remove.</td>
+<td></td>
 </tr>
 </tbody></table>
 
@@ -471,11 +532,13 @@ curl https://api.cloco.io/&lt;subscription_id&gt;/applications  --header Content
 <tr>
 <th>Parameter</th>
 <th>Description</th>
+<th>Usage</th>
 </tr>
 </thead><tbody>
 <tr>
 <td>subscription_id</td>
 <td>The ID of the subscription.</td>
+<td>Optional if defaulted via the &ndash;init command</td>
 </tr>
 </tbody></table>
 
@@ -535,15 +598,18 @@ Note that subscription limits on number of applications, number of configuration
 <tr>
 <th>Parameter</th>
 <th>Description</th>
+<th>Usage</th>
 </tr>
 </thead><tbody>
 <tr>
 <td>subscription_id</td>
 <td>The ID of the subscription.</td>
+<td>Optional if defaulted via the &ndash;init command</td>
 </tr>
 <tr>
 <td>application_id</td>
 <td>The ID of the application.</td>
+<td>Optional if defaulted via the &ndash;init command</td>
 </tr>
 </tbody></table>
 
@@ -599,15 +665,18 @@ curl https://api.cloco.io/&lt;subscription_id&gt;/applications/&lt;application_i
 <tr>
 <th>Parameter</th>
 <th>Description</th>
+<th>Usage</th>
 </tr>
 </thead><tbody>
 <tr>
 <td>subscription_id</td>
 <td>The ID of the subscription.</td>
+<td>Optional if defaulted via the &ndash;init command</td>
 </tr>
 <tr>
 <td>application_id</td>
 <td>The ID of the application.</td>
+<td>Optional if defaulted via the &ndash;init command</td>
 </tr>
 </tbody></table>
 
@@ -634,15 +703,18 @@ curl -X DELETE https://api.cloco.io/&lt;subscription_id&gt;/applications/&lt;app
 <tr>
 <th>Parameter</th>
 <th>Description</th>
+<th>Usage</th>
 </tr>
 </thead><tbody>
 <tr>
 <td>subscription_id</td>
 <td>The ID of the subscription.</td>
+<td>Optional if defaulted via the &ndash;init command</td>
 </tr>
 <tr>
 <td>application_id</td>
 <td>The ID of the application.</td>
+<td>Optional if defaulted via the &ndash;init command</td>
 </tr>
 </tbody></table>
 
@@ -666,7 +738,7 @@ curl https://api.cloco.io/&lt;subscription_id&gt;/applications/&lt;application_i
 </blockquote>
 <pre class="highlight json"><code><span class="p">[</span><span class="w">
   </span><span class="p">{</span><span class="w">
-    </span><span class="nt">"identity"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;email&gt;"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"identity"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;username&gt;"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"permissionLevel"</span><span class="p">:</span><span class="w"> </span><span class="s2">"admin|user"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">]</span><span class="w">
@@ -680,15 +752,18 @@ curl https://api.cloco.io/&lt;subscription_id&gt;/applications/&lt;application_i
 <tr>
 <th>Parameter</th>
 <th>Description</th>
+<th>Usage</th>
 </tr>
 </thead><tbody>
 <tr>
 <td>subscription_id</td>
 <td>The ID of the subscription.</td>
+<td>Optional if defaulted via the &ndash;init command</td>
 </tr>
 <tr>
 <td>application_id</td>
 <td>The ID of the application.</td>
+<td>Optional if defaulted via the &ndash;init command</td>
 </tr>
 </tbody></table>
 
@@ -701,7 +776,7 @@ Requires subscription admin privilege or application admin privilege.
 <blockquote>
 <p>To add an application user, use this code:</p>
 </blockquote>
-<pre class="highlight shell"><code>cloco --add-app-user --sub &lt;subscription_id&gt; --app &lt;application_id&gt; -u &lt;email&gt;
+<pre class="highlight shell"><code>cloco --add-app-user --sub &lt;subscription_id&gt; --app &lt;application_id&gt; -u &lt;username&gt;
 
 <span class="c"># Alternatively, use curl:</span>
 curl -X POST --data <span class="nv">$json</span> https://api.cloco.io/&lt;subscription_id&gt;/applications/&lt;application_id&gt;/users --header Content-Type:application/json --header <span class="s2">"Authorization:Bearer &lt;token&gt;"</span>
@@ -711,12 +786,12 @@ curl -X POST --data <span class="nv">$json</span> https://api.cloco.io/&lt;subsc
 <p>The above command requires JSON structured like this:</p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="nt">"identity"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;email&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"identity"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;username&gt;"</span><span class="p">,</span><span class="w">
   </span><span class="nt">"permissionLevel"</span><span class="p">:</span><span class="w"> </span><span class="s2">"admin|user"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 
-<p>This command lets you add a cloco user to the application via their email address.  A user added as an application user will be able to list applications they have admin rights to view.</p>
+<p>This command lets you add a cloco user to the application via their username.  A user added as an application user will be able to list applications they have admin rights to view.</p>
 
 <h3 id="url-parameters">URL Parameters</h3>
 
@@ -724,15 +799,18 @@ curl -X POST --data <span class="nv">$json</span> https://api.cloco.io/&lt;subsc
 <tr>
 <th>Parameter</th>
 <th>Description</th>
+<th>Usage</th>
 </tr>
 </thead><tbody>
 <tr>
 <td>subscription_id</td>
 <td>The ID of the subscription.</td>
+<td>Optional if defaulted via the &ndash;init command</td>
 </tr>
 <tr>
 <td>application_id</td>
 <td>The ID of the application.</td>
+<td>Optional if defaulted via the &ndash;init command</td>
 </tr>
 </tbody></table>
 
@@ -745,13 +823,13 @@ Requires subscription admin privilege or application admin privilege.
 <blockquote>
 <p>To remove an application user, use this code:</p>
 </blockquote>
-<pre class="highlight shell"><code>cloco --rm-app-user --sub &lt;subscription_id&gt; --app &lt;application_id&gt; -u &lt;email&gt;
+<pre class="highlight shell"><code>cloco --rm-app-user --sub &lt;subscription_id&gt; --app &lt;application_id&gt; -u &lt;username&gt;
 
 <span class="c"># Alternatively, use curl:</span>
-curl -X DELETE --data <span class="nv">$json</span> https://api.cloco.io/&lt;subscription_id&gt;/applications/&lt;application_id&gt;/users/&lt;email&gt; --header Content-Type:application/json --header <span class="s2">"Authorization:Bearer &lt;token&gt;"</span>
+curl -X DELETE --data <span class="nv">$json</span> https://api.cloco.io/&lt;subscription_id&gt;/applications/&lt;application_id&gt;/users/&lt;username&gt; --header Content-Type:application/json --header <span class="s2">"Authorization:Bearer &lt;token&gt;"</span>
 </code></pre>
 
-<p>This command lets you remove a cloco user from the application via their email address.  </p>
+<p>This command lets you remove a cloco user from the application via their username.  </p>
 
 <h3 id="url-parameters">URL Parameters</h3>
 
@@ -759,19 +837,23 @@ curl -X DELETE --data <span class="nv">$json</span> https://api.cloco.io/&lt;sub
 <tr>
 <th>Parameter</th>
 <th>Description</th>
+<th>Usage</th>
 </tr>
 </thead><tbody>
 <tr>
 <td>subscription_id</td>
 <td>The ID of the subscription.</td>
+<td>Optional if defaulted via the &ndash;init command</td>
 </tr>
 <tr>
 <td>application_id</td>
 <td>The ID of the application.</td>
+<td>Optional if defaulted via the &ndash;init command</td>
 </tr>
 <tr>
-<td>email</td>
-<td>The identity email of the user to remove.</td>
+<td>username</td>
+<td>The identity of the user to remove.</td>
+<td></td>
 </tr>
 </tbody></table>
 
@@ -824,11 +906,13 @@ curl https://api.cloco.io/&lt;subscription_id&gt;/configuration  --header Conten
 <tr>
 <th>Parameter</th>
 <th>Description</th>
+<th>Usage</th>
 </tr>
 </thead><tbody>
 <tr>
 <td>subscription_id</td>
 <td>The ID of the subscription.</td>
+<td>Optional if defaulted via the &ndash;init command</td>
 </tr>
 </tbody></table>
 
@@ -873,15 +957,18 @@ curl https://api.cloco.io/&lt;subscription_id&gt;/configuration/&lt;application_
 <tr>
 <th>Parameter</th>
 <th>Description</th>
+<th>Usage</th>
 </tr>
 </thead><tbody>
 <tr>
 <td>subscription_id</td>
 <td>The ID of the subscription.</td>
+<td>Optional if defaulted via the &ndash;init command</td>
 </tr>
 <tr>
 <td>application_id</td>
 <td>The ID of the application.</td>
+<td>Optional if defaulted via the &ndash;init command</td>
 </tr>
 </tbody></table>
 
@@ -894,7 +981,7 @@ Requires subscription admin privilege or application admin privilege.
 <blockquote>
 <p>To save configuration data, use this code:</p>
 </blockquote>
-<pre class="highlight shell"><code>cloco --get-app --sub &lt;subscription_id&gt; --cob &lt;application_id&gt;/&lt;object_id&gt;/&lt;environment_id&gt; --file &lt;path_to_data_file&gt;
+<pre class="highlight shell"><code>cloco --get-app --sub &lt;subscription_id&gt; --app &lt;application_id&gt; --cob &lt;object_id&gt; --env &lt;environment_id&gt; --file &lt;path_to_data_file&gt;
 
 <span class="c"># Alternatively, use curl:</span>
 curl -X PUT --data @&lt;path_to_data_file&gt; https://api.cloco.io/&lt;subscription_id&gt;/configuration/&lt;application_id&gt;/&lt;object_id&gt;/&lt;environment_id&gt; --header Content-Type:application/json --header <span class="s2">"Authorization:Bearer &lt;token&gt;"</span>
@@ -912,23 +999,28 @@ curl -X PUT --data @&lt;path_to_data_file&gt; https://api.cloco.io/&lt;subscript
 <tr>
 <th>Parameter</th>
 <th>Description</th>
+<th>Usage</th>
 </tr>
 </thead><tbody>
 <tr>
 <td>subscription_id</td>
 <td>The ID of the subscription.</td>
+<td>Optional if defaulted via the &ndash;init command</td>
 </tr>
 <tr>
 <td>application_id</td>
 <td>The ID of the application.</td>
+<td>Optional if defaulted via the &ndash;init command</td>
 </tr>
 <tr>
 <td>object_id</td>
 <td>The ID of the configuration object.</td>
+<td>Required.</td>
 </tr>
 <tr>
 <td>environment_id</td>
 <td>The ID of the environment.</td>
+<td>Optional if defaulted via the &ndash;init command</td>
 </tr>
 </tbody></table>
 
@@ -941,7 +1033,7 @@ Requires write permission as a configuration object user, else subscription admi
 <blockquote>
 <p>To retrieve configuration data, use this code:</p>
 </blockquote>
-<pre class="highlight shell"><code>cloco --get-cob --sub &lt;subscription_id&gt; --cob &lt;application_id&gt;/&lt;object_id&gt;/&lt;environment_id&gt;
+<pre class="highlight shell"><code>cloco --get-cob --sub &lt;subscription_id&gt; --app &lt;application_id&gt; --cob &lt;object_id&gt; --env &lt;environment_id&gt;
 
 <span class="c"># Alternatively, use curl:</span>
 curl https://api.cloco.io/&lt;subscription_id&gt;/configuration/&lt;application_id&gt;/&lt;object_id&gt;/&lt;environment_id&gt; --header Content-Type:application/json --header <span class="s2">"Authorization:Bearer &lt;token&gt;"</span>
@@ -972,23 +1064,28 @@ curl https://api.cloco.io/&lt;subscription_id&gt;/configuration/&lt;application_
 <tr>
 <th>Parameter</th>
 <th>Description</th>
+<th>Usage</th>
 </tr>
 </thead><tbody>
 <tr>
 <td>subscription_id</td>
 <td>The ID of the subscription.</td>
+<td>Optional if defaulted via the &ndash;init command</td>
 </tr>
 <tr>
 <td>application_id</td>
 <td>The ID of the application.</td>
+<td>Optional if defaulted via the &ndash;init command</td>
 </tr>
 <tr>
 <td>object_id</td>
 <td>The ID of the configuration object.</td>
+<td>Required.</td>
 </tr>
 <tr>
 <td>environment_id</td>
 <td>The ID of the environment.</td>
+<td>Optional if defaulted via the &ndash;init command</td>
 </tr>
 </tbody></table>
 
@@ -1001,7 +1098,7 @@ Requires read or write permission as a configuration object user, else subscript
 <blockquote>
 <p>To list the versions of your configuration object, use this code:</p>
 </blockquote>
-<pre class="highlight shell"><code>cloco --get-history --sub &lt;subscription_id&gt; --cob &lt;application_id&gt;/&lt;object_id&gt;/&lt;environment_id&gt;
+<pre class="highlight shell"><code>cloco --get-history --sub &lt;subscription_id&gt; --app &lt;application_id&gt; --cob &lt;object_id&gt; --env &lt;environment_id&gt;
 
 <span class="c"># Alternatively, use curl:</span>
 curl https://api.cloco.io/&lt;subscription_id&gt;/configuration/versions/&lt;application_id&gt;/&lt;object_id&gt;/&lt;environment_id&gt;  --header Content-Type:application/json --header <span class="s2">"Authorization:Bearer &lt;token&gt;"</span>
@@ -1033,23 +1130,28 @@ curl https://api.cloco.io/&lt;subscription_id&gt;/configuration/versions/&lt;app
 <tr>
 <th>Parameter</th>
 <th>Description</th>
+<th>Usage</th>
 </tr>
 </thead><tbody>
 <tr>
 <td>subscription_id</td>
 <td>The ID of the subscription.</td>
+<td>Optional if defaulted via the &ndash;init command</td>
 </tr>
 <tr>
 <td>application_id</td>
 <td>The ID of the application.</td>
+<td>Optional if defaulted via the &ndash;init command</td>
 </tr>
 <tr>
 <td>object_id</td>
 <td>The ID of the configuration object.</td>
+<td>Required.</td>
 </tr>
 <tr>
 <td>environment_id</td>
 <td>The ID of the environment.</td>
+<td>Optional if defaulted via the &ndash;init command</td>
 </tr>
 </tbody></table>
 
@@ -1062,7 +1164,7 @@ Requires read or write permission as a configuration object user, else subscript
 <blockquote>
 <p>To retrieve a previous version of your configuration data, use this code:</p>
 </blockquote>
-<pre class="highlight shell"><code>cloco --get-version --sub &lt;subscription_id&gt; --cob &lt;application_id&gt;/&lt;object_id&gt;/&lt;environment_id&gt; ---version &lt;version&gt;
+<pre class="highlight shell"><code>cloco --get-version --sub &lt;subscription_id&gt; --app &lt;application_id&gt; --cob &lt;object_id&gt; --env &lt;environment_id&gt; ---version &lt;version&gt;
 
 <span class="c"># Alternatively, use curl:</span>
 curl https://api.cloco.io/&lt;subscription_id&gt;/configuration/versions/&lt;application_id&gt;/&lt;object_id&gt;/&lt;environment_id&gt;/&lt;version&gt; --header Content-Type:application/json --header <span class="s2">"Authorization:Bearer &lt;token&gt;"</span>
@@ -1093,27 +1195,33 @@ curl https://api.cloco.io/&lt;subscription_id&gt;/configuration/versions/&lt;app
 <tr>
 <th>Parameter</th>
 <th>Description</th>
+<th>Usage</th>
 </tr>
 </thead><tbody>
 <tr>
 <td>subscription_id</td>
 <td>The ID of the subscription.</td>
+<td>Optional if defaulted via the &ndash;init command</td>
 </tr>
 <tr>
 <td>application_id</td>
 <td>The ID of the application.</td>
+<td>Optional if defaulted via the &ndash;init command</td>
 </tr>
 <tr>
 <td>object_id</td>
 <td>The ID of the configuration object.</td>
+<td>Required.</td>
 </tr>
 <tr>
 <td>environment_id</td>
 <td>The ID of the environment.</td>
+<td>Optional if defaulted via the &ndash;init command</td>
 </tr>
 <tr>
 <td>version</td>
 <td>The version number of the configuration object to roll back to.</td>
+<td></td>
 </tr>
 </tbody></table>
 
@@ -1126,7 +1234,7 @@ Requires read or write permission as a configuration object user, else subscript
 <blockquote>
 <p>To rollback your configuration data to a previous version, use this code:</p>
 </blockquote>
-<pre class="highlight shell"><code>cloco --restore-version --sub &lt;subscription_id&gt; --cob &lt;application_id&gt;/&lt;object_id&gt;/&lt;environment_id&gt; ---version &lt;version&gt;
+<pre class="highlight shell"><code>cloco --restore-version --sub &lt;subscription_id&gt; --app &lt;application_id&gt; --cob &lt;object_id&gt; --env &lt;environment_id&gt; ---version &lt;version&gt;
 
 <span class="c"># Alternatively, use curl:</span>
 curl -X PUT https://api.cloco.io/&lt;subscription_id&gt;/configuration/versions/&lt;application_id&gt;/&lt;object_id&gt;/&lt;environment_id&gt;/&lt;version&gt; --header Content-Type:application/json --header <span class="s2">"Authorization:Bearer &lt;token&gt;"</span>
@@ -1144,27 +1252,33 @@ curl -X PUT https://api.cloco.io/&lt;subscription_id&gt;/configuration/versions/
 <tr>
 <th>Parameter</th>
 <th>Description</th>
+<th>Usage</th>
 </tr>
 </thead><tbody>
 <tr>
 <td>subscription_id</td>
 <td>The ID of the subscription.</td>
+<td>Optional if defaulted via the &ndash;init command</td>
 </tr>
 <tr>
 <td>application_id</td>
 <td>The ID of the application.</td>
+<td>Optional if defaulted via the &ndash;init command</td>
 </tr>
 <tr>
 <td>object_id</td>
 <td>The ID of the configuration object.</td>
+<td>Required.</td>
 </tr>
 <tr>
 <td>environment_id</td>
 <td>The ID of the environment.</td>
+<td>Optional if defaulted via the &ndash;init command</td>
 </tr>
 <tr>
 <td>version</td>
 <td>The version number of the configuration object to roll back to.</td>
+<td></td>
 </tr>
 </tbody></table>
 
@@ -1181,7 +1295,7 @@ Requires write permission as a configuration object user, else subscription admi
 <blockquote>
 <p>To list the configuration object users, use this code:</p>
 </blockquote>
-<pre class="highlight shell"><code>cloco --list-cob-users --sub &lt;subscription_id&gt; --cob &lt;application_id&gt;/&lt;object_id&gt;/&lt;environment_id&gt;
+<pre class="highlight shell"><code>cloco --list-cob-users --sub &lt;subscription_id&gt; --app &lt;application_id&gt; --cob &lt;object_id&gt; --env &lt;environment_id&gt;
 
 <span class="c"># Alternatively, use curl:</span>
 curl https://api.cloco.io/&lt;subscription_id&gt;/configuration/&lt;application_id&gt;/&lt;object_id&gt;/&lt;environment_id&gt;/users --header Content-Type:application/json --header <span class="s2">"Authorization:Bearer &lt;token&gt;"</span>
@@ -1192,7 +1306,7 @@ curl https://api.cloco.io/&lt;subscription_id&gt;/configuration/&lt;application_
 </blockquote>
 <pre class="highlight json"><code><span class="p">[</span><span class="w">
   </span><span class="p">{</span><span class="w">
-    </span><span class="nt">"identity"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;email&gt;"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"identity"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;username&gt;"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"permissionLevel"</span><span class="p">:</span><span class="w"> </span><span class="s2">"admin|user"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">]</span><span class="w">
@@ -1206,23 +1320,28 @@ curl https://api.cloco.io/&lt;subscription_id&gt;/configuration/&lt;application_
 <tr>
 <th>Parameter</th>
 <th>Description</th>
+<th>Usage</th>
 </tr>
 </thead><tbody>
 <tr>
 <td>subscription_id</td>
 <td>The ID of the subscription.</td>
+<td>Optional if defaulted via the &ndash;init command</td>
 </tr>
 <tr>
 <td>application_id</td>
 <td>The ID of the application.</td>
+<td>Optional if defaulted via the &ndash;init command</td>
 </tr>
 <tr>
 <td>object_id</td>
 <td>The ID of the configuration object.</td>
+<td>Required.</td>
 </tr>
 <tr>
 <td>environment_id</td>
 <td>The ID of the environment.</td>
+<td>Optional if defaulted via the &ndash;init command</td>
 </tr>
 </tbody></table>
 
@@ -1235,22 +1354,22 @@ Requires subscription admin privilege or application admin privilege.
 <blockquote>
 <p>To add a configuration object user, use this code:</p>
 </blockquote>
-<pre class="highlight shell"><code>cloco --add-cob-user --sub &lt;subscription_id&gt; --cob &lt;application_id&gt;/&lt;object_id&gt;/&lt;environment_id&gt; -u &lt;email&gt; -r <span class="s2">"read|write"</span>
+<pre class="highlight shell"><code>cloco --add-cob-user --sub &lt;subscription_id&gt; --app &lt;application_id&gt; --cob &lt;object_id&gt; --env &lt;environment_id&gt; -u &lt;username&gt; -r <span class="s2">"read|write"</span>
 
 <span class="c"># Alternatively, use curl:</span>
-curl -X POST --data <span class="nv">$json</span> https://api.cloco.io/&lt;subscription_id&gt;/configuration/&lt;application_id&gt;/&lt;object_id&gt;/&lt;environment_id&gt;/users/&lt;email&gt; --header Content-Type:application/json --header <span class="s2">"Authorization:Bearer &lt;token&gt;"</span>
+curl -X POST --data <span class="nv">$json</span> https://api.cloco.io/&lt;subscription_id&gt;/configuration/&lt;application_id&gt;/&lt;object_id&gt;/&lt;environment_id&gt;/users/&lt;username&gt; --header Content-Type:application/json --header <span class="s2">"Authorization:Bearer &lt;token&gt;"</span>
 </code></pre>
 
 <blockquote>
 <p>The above command requires JSON structured like this:</p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="nt">"identity"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;email&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"identity"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;username&gt;"</span><span class="p">,</span><span class="w">
   </span><span class="nt">"permissionLevel"</span><span class="p">:</span><span class="w"> </span><span class="s2">"admin|user"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 
-<p>This command lets you add a cloco user to the configuration object via their email address.  Note that this applies to a single configuration object in a single application, referencing a single application.</p>
+<p>This command lets you add a cloco user to the configuration object via their username.  Note that this applies to a single configuration object in a single application, referencing a single application.</p>
 
 <h3 id="url-parameters">URL Parameters</h3>
 
@@ -1258,27 +1377,33 @@ curl -X POST --data <span class="nv">$json</span> https://api.cloco.io/&lt;subsc
 <tr>
 <th>Parameter</th>
 <th>Description</th>
+<th>Usage</th>
 </tr>
 </thead><tbody>
 <tr>
 <td>subscription_id</td>
 <td>The ID of the subscription.</td>
+<td>Optional if defaulted via the &ndash;init command</td>
 </tr>
 <tr>
 <td>application_id</td>
 <td>The ID of the application.</td>
+<td>Optional if defaulted via the &ndash;init command</td>
 </tr>
 <tr>
 <td>object_id</td>
 <td>The ID of the configuration object.</td>
+<td>Required.</td>
 </tr>
 <tr>
 <td>environment_id</td>
 <td>The ID of the environment.</td>
+<td>Optional if defaulted via the &ndash;init command</td>
 </tr>
 <tr>
-<td>email</td>
-<td>The identity email of the user to remove.</td>
+<td>username</td>
+<td>The identity of the user to remove.</td>
+<td></td>
 </tr>
 </tbody></table>
 
@@ -1295,13 +1420,13 @@ Requires subscription admin privilege or application admin privilege.
 <blockquote>
 <p>To remove a configuration object user, use this code:</p>
 </blockquote>
-<pre class="highlight shell"><code>cloco --rm-cob-user --sub &lt;subscription_id&gt; --cob &lt;application_id&gt;/&lt;object_id&gt;/&lt;environment_id&gt; -u &lt;email&gt;
+<pre class="highlight shell"><code>cloco --rm-cob-user --sub &lt;subscription_id&gt; --app &lt;application_id&gt; --cob &lt;object_id&gt; --env &lt;environment_id&gt; -u &lt;username&gt;
 
 <span class="c"># Alternatively, use curl:</span>
-curl -X DELETE --data <span class="nv">$json</span> https://api.cloco.io/&lt;subscription_id&gt;/configuration/&lt;application_id&gt;/&lt;object_id&gt;/&lt;environment_id&gt;/users/&lt;email&gt; --header Content-Type:application/json --header <span class="s2">"Authorization:Bearer &lt;token&gt;"</span>
+curl -X DELETE --data <span class="nv">$json</span> https://api.cloco.io/&lt;subscription_id&gt;/configuration/&lt;application_id&gt;/&lt;object_id&gt;/&lt;environment_id&gt;/users/&lt;username&gt; --header Content-Type:application/json --header <span class="s2">"Authorization:Bearer &lt;token&gt;"</span>
 </code></pre>
 
-<p>This command lets you remove a cloco user from the configuration object via their email address.  Note that this applies to a single configuration object in a single application, referencing a single application.</p>
+<p>This command lets you remove a cloco user from the configuration object via their username.  Note that this applies to a single configuration object in a single application, referencing a single application.</p>
 
 <h3 id="url-parameters">URL Parameters</h3>
 
@@ -1309,27 +1434,33 @@ curl -X DELETE --data <span class="nv">$json</span> https://api.cloco.io/&lt;sub
 <tr>
 <th>Parameter</th>
 <th>Description</th>
+<th>Usage</th>
 </tr>
 </thead><tbody>
 <tr>
 <td>subscription_id</td>
 <td>The ID of the subscription.</td>
+<td>Optional if defaulted via the &ndash;init command</td>
 </tr>
 <tr>
 <td>application_id</td>
 <td>The ID of the application.</td>
+<td>Optional if defaulted via the &ndash;init command</td>
 </tr>
 <tr>
 <td>object_id</td>
 <td>The ID of the configuration object.</td>
+<td>Required.</td>
 </tr>
 <tr>
 <td>environment_id</td>
 <td>The ID of the environment.</td>
+<td>Optional if defaulted via the &ndash;init command</td>
 </tr>
 <tr>
-<td>email</td>
-<td>The identity email of the user to remove.</td>
+<td>username</td>
+<td>The identity of the user to remove.</td>
+<td></td>
 </tr>
 </tbody></table>
 
