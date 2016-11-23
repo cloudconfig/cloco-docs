@@ -83,7 +83,9 @@ cloco --init --env <environment_id>
 cloco --init --url <api url>
 ```
 
-Using the cloco bash script you can set defaults for subscription, application, environment, and for use with on-premise installs of cloco, the API URL.### URL Parameters
+Using the cloco bash script you can set defaults for subscription, application, environment, and for use with on-premise installs of cloco, the API URL.
+
+### URL Parameters
 
 Parameter | Description | Usage
 --------- | ----------- | -----
