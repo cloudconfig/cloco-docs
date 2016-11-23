@@ -65,6 +65,37 @@ The utility for authorizing your machine to use cloco is available at [https://g
 
 The bash utility for cloco is available at [https://github.com/cloudconfig/cloco-bash](https://github.com/cloudconfig/cloco-bash).  Follow the instructions in the README to download and install the utility.
 
+## Setting Defaults
+
+> To set default subscription, application, environment, API URL:
+
+```shell
+# To set the default subscription
+cloco --init --sub <subscription_id>
+
+# To set the default application
+cloco --init --app <application_id>
+
+# To set the default environment
+cloco --init --env <environment_id>
+
+# To set the default API URL (for on-premise istallations):
+cloco --init --url <api url>
+```
+
+Using the cloco bash script you can set defaults for subscription, application, environment, and for use with on-premise installs of cloco, the API URL.### URL Parameters
+
+Parameter | Description | Usage
+--------- | ----------- | -----
+subscription_id | The ID of the subscription. | Optional.  
+application_id | The ID of the application. | Optional.
+environment_id | The ID of the environment. | Optional.
+url | The cloco API url. | Optional.  Will default to the public hosted cloco API.
+
+<aside class="notice">
+Note that these are saved against the logged on user's profile, so if you are initializing for an application you will need to execute these using the same user as the application will run under.
+</aside>
+
 # User Accounts
 
 ## Signup
@@ -82,7 +113,6 @@ Currently we only support GitHub login.
 > To refresh your credentials:
 
 ```shell
-# Use the --init operation to log in
 cloco --refresh-login
 ```
 
@@ -173,9 +203,9 @@ This command retrieves the subscription information.
 
 ### URL Parameters
 
-Parameter | Description
---------- | -----------
-subscription_id | The ID of the subscription.
+Parameter | Description | Usage
+--------- | ----------- | -----
+subscription_id | The ID of the subscription. | Optional if defaulted via the --init command
 
 <aside class="notice">
 Requires subscription admin privilege.
@@ -197,7 +227,7 @@ curl https://api.cloco.io/<subscription_id>/users --header Content-Type:applicat
 ```json
 [
   {
-    "identity": "<email>",
+    "identity": "<username>",
     "permissionLevel": "admin|user"
   }
 ]
@@ -207,9 +237,9 @@ This command lets you list all of the users that are present in the subscription
 
 ### URL Parameters
 
-Parameter | Description
---------- | -----------
-subscription_id | The ID of the subscription.
+Parameter | Description | Usage
+--------- | ----------- | -----
+subscription_id | The ID of the subscription. | Optional if defaulted via the --init command
 
 <aside class="notice">
 Requires subscription admin privilege.
@@ -220,7 +250,7 @@ Requires subscription admin privilege.
 > To add subscription user, use this code:
 
 ```shell
-cloco --add-user --sub <subscription_id> -u <email> -r admin|user
+cloco --add-user --sub <subscription_id> -u <username> -r admin|user
 
 # Alternatively, use curl:
 curl -X POST --data $json https://api.cloco.io/<subscription_id>/users --header Content-Type:application/json --header "Authorization:Bearer <token>"
@@ -230,20 +260,20 @@ curl -X POST --data $json https://api.cloco.io/<subscription_id>/users --header 
 
 ```json
 {
-  "identity": "<email>",
+  "identity": "<username>",
   "permissionLevel": "admin|user"
 }
 ```
 
-This command lets you add a cloco user to the subscription via their email address.  Once the user signs into cloco they will see the subscription in their list of available subscriptions and will be able to use cloco with the required level of privilege.
+This command lets you add a cloco user to the subscription via their username.  Once the user signs into cloco they will see the subscription in their list of available subscriptions and will be able to use cloco with the required level of privilege.
 
 A user needs to be added to the subscription before they can be granted permissions on either an application or a configuration object.
 
 ### URL Parameters
 
-Parameter | Description
---------- | -----------
-subscription_id | The ID of the subscription.
+Parameter | Description | Usage
+--------- | ----------- | -----
+subscription_id | The ID of the subscription. | Optional if defaulted via the --init command
 
 <aside class="notice">
 Requires subscription admin privilege.
@@ -254,20 +284,20 @@ Requires subscription admin privilege.
 > To remove a subscription user, use this code:
 
 ```shell
-cloco --rm-user --sub <subscription_id> -u <email>
+cloco --rm-user --sub <subscription_id> -u <username>
 
 # Alternatively, use curl:
-curl -X DELETE --data $json https://api.cloco.io/<subscription_id>/users/<email> --header Content-Type:application/json --header "Authorization:Bearer <token>"
+curl -X DELETE --data $json https://api.cloco.io/<subscription_id>/users/<username> --header Content-Type:application/json --header "Authorization:Bearer <token>"
 ```
 
-This command lets you remove a cloco user from the subscription via their email address.  
+This command lets you remove a cloco user from the subscription via their username.  
 
 ### URL Parameters
 
-Parameter | Description
---------- | -----------
-subscription_id | The ID of the subscription.
-email | The identity email of the user to remove.
+Parameter | Description | Usage
+--------- | ----------- | -----
+subscription_id | The ID of the subscription. | Optional if defaulted via the --init command
+username | The identity of the user to remove.
 
 <aside class="warning">
 You cannot remove yourself from the subscription.  If you want to do this you must first ensure another admin is present within the subscription and then get them to remove you.
@@ -327,9 +357,9 @@ This command retrieves all of the application metadata within the subscription. 
 
 ### URL Parameters
 
-Parameter | Description
---------- | -----------
-subscription_id | The ID of the subscription.
+Parameter | Description | Usage
+--------- | ----------- | -----
+subscription_id | The ID of the subscription. | Optional if defaulted via the --init command
 
 <aside class="notice">
 Requires subscription admin privilege.
@@ -383,10 +413,10 @@ Note that subscription limits on number of applications, number of configuration
 
 ### URL Parameters
 
-Parameter | Description
---------- | -----------
-subscription_id | The ID of the subscription.
-application_id | The ID of the application.
+Parameter | Description | Usage
+--------- | ----------- | -----
+subscription_id | The ID of the subscription. | Optional if defaulted via the --init command
+application_id | The ID of the application. | Optional if defaulted via the --init command
 
 <aside class="notice">
 Requires subscription admin privilege.
@@ -436,10 +466,10 @@ This command retrieves the application information.
 
 ### URL Parameters
 
-Parameter | Description
---------- | -----------
-subscription_id | The ID of the subscription.
-application_id | The ID of the application.
+Parameter | Description | Usage
+--------- | ----------- | -----
+subscription_id | The ID of the subscription. | Optional if defaulted via the --init command
+application_id | The ID of the application. | Optional if defaulted via the --init command
 
 <aside class="notice">
 Requires subscription admin privilege or application admin privilege.
@@ -460,10 +490,10 @@ This command deletes the application and any associated configuration stored wit
 
 ### URL Parameters
 
-Parameter | Description
---------- | -----------
-subscription_id | The ID of the subscription.
-application_id | The ID of the application.
+Parameter | Description | Usage
+--------- | ----------- | -----
+subscription_id | The ID of the subscription. | Optional if defaulted via the --init command
+application_id | The ID of the application. | Optional if defaulted via the --init command
 
 <aside class="notice">
 Requires subscription admin privilege or application admin privilege.
@@ -485,7 +515,7 @@ curl https://api.cloco.io/<subscription_id>/applications/<application_id>/users 
 ```json
 [
   {
-    "identity": "<email>",
+    "identity": "<username>",
     "permissionLevel": "admin|user"
   }
 ]
@@ -495,10 +525,10 @@ This command lets you list all of the users that are presently assigned to the a
 
 ### URL Parameters
 
-Parameter | Description
---------- | -----------
-subscription_id | The ID of the subscription.
-application_id | The ID of the application.
+Parameter | Description | Usage
+--------- | ----------- | -----
+subscription_id | The ID of the subscription. | Optional if defaulted via the --init command
+application_id | The ID of the application. | Optional if defaulted via the --init command
 
 <aside class="notice">
 Requires subscription admin privilege or application admin privilege.
@@ -509,7 +539,7 @@ Requires subscription admin privilege or application admin privilege.
 > To add an application user, use this code:
 
 ```shell
-cloco --add-app-user --sub <subscription_id> --app <application_id> -u <email>
+cloco --add-app-user --sub <subscription_id> --app <application_id> -u <username>
 
 # Alternatively, use curl:
 curl -X POST --data $json https://api.cloco.io/<subscription_id>/applications/<application_id>/users --header Content-Type:application/json --header "Authorization:Bearer <token>"
@@ -519,19 +549,19 @@ curl -X POST --data $json https://api.cloco.io/<subscription_id>/applications/<a
 
 ```json
 {
-  "identity": "<email>",
+  "identity": "<username>",
   "permissionLevel": "admin|user"
 }
 ```
 
-This command lets you add a cloco user to the application via their email address.  A user added as an application user will be able to list applications they have admin rights to view.
+This command lets you add a cloco user to the application via their username.  A user added as an application user will be able to list applications they have admin rights to view.
 
 ### URL Parameters
 
-Parameter | Description
---------- | -----------
-subscription_id | The ID of the subscription.
-application_id | The ID of the application.
+Parameter | Description | Usage
+--------- | ----------- | -----
+subscription_id | The ID of the subscription. | Optional if defaulted via the --init command
+application_id | The ID of the application. | Optional if defaulted via the --init command
 
 <aside class="notice">
 Requires subscription admin privilege or application admin privilege.
@@ -542,21 +572,21 @@ Requires subscription admin privilege or application admin privilege.
 > To remove an application user, use this code:
 
 ```shell
-cloco --rm-app-user --sub <subscription_id> --app <application_id> -u <email>
+cloco --rm-app-user --sub <subscription_id> --app <application_id> -u <username>
 
 # Alternatively, use curl:
-curl -X DELETE --data $json https://api.cloco.io/<subscription_id>/applications/<application_id>/users/<email> --header Content-Type:application/json --header "Authorization:Bearer <token>"
+curl -X DELETE --data $json https://api.cloco.io/<subscription_id>/applications/<application_id>/users/<username> --header Content-Type:application/json --header "Authorization:Bearer <token>"
 ```
 
-This command lets you remove a cloco user from the application via their email address.  
+This command lets you remove a cloco user from the application via their username.  
 
 ### URL Parameters
 
-Parameter | Description
---------- | -----------
-subscription_id | The ID of the subscription.
-application_id | The ID of the application.
-email | The identity email of the user to remove.
+Parameter | Description | Usage
+--------- | ----------- | -----
+subscription_id | The ID of the subscription. | Optional if defaulted via the --init command
+application_id | The ID of the application. | Optional if defaulted via the --init command
+username | The identity of the user to remove.
 
 <aside class="warning">
 You cannot remove yourself from the application.  If you want to do this you must first ensure another admin is present within the application and then get them to remove you.
@@ -603,9 +633,9 @@ This command retrieves the headers (but not the configuration data) of all of th
 
 ### URL Parameters
 
-Parameter | Description
---------- | -----------
-subscription_id | The ID of the subscription.
+Parameter | Description | Usage
+--------- | ----------- | -----
+subscription_id | The ID of the subscription. | Optional if defaulted via the --init command
 
 <aside class="notice">
 Requires subscription admin privilege.
@@ -644,10 +674,10 @@ This command retrieves the headers (but not the configuration data) of all of th
 
 ### URL Parameters
 
-Parameter | Description
---------- | -----------
-subscription_id | The ID of the subscription.
-application_id | The ID of the application.
+Parameter | Description | Usage
+--------- | ----------- | -----
+subscription_id | The ID of the subscription. | Optional if defaulted via the --init command
+application_id | The ID of the application. | Optional if defaulted via the --init command
 
 <aside class="notice">
 Requires subscription admin privilege or application admin privilege.
@@ -658,7 +688,7 @@ Requires subscription admin privilege or application admin privilege.
 > To save configuration data, use this code:
 
 ```shell
-cloco --get-app --sub <subscription_id> --cob <application_id>/<object_id>/<environment_id> --file <path_to_data_file>
+cloco --get-app --sub <subscription_id> --app <application_id> --cob <object_id> --env <environment_id> --file <path_to_data_file>
 
 # Alternatively, use curl:
 curl -X PUT --data @<path_to_data_file> https://api.cloco.io/<subscription_id>/configuration/<application_id>/<object_id>/<environment_id> --header Content-Type:application/json --header "Authorization:Bearer <token>"
@@ -670,12 +700,12 @@ This command saves the configuration data within cloco.  We recommend that you e
 
 ### URL Parameters
 
-Parameter | Description
---------- | -----------
-subscription_id | The ID of the subscription.
-application_id | The ID of the application.
-object_id | The ID of the configuration object.
-environment_id | The ID of the environment.
+Parameter | Description | Usage
+--------- | ----------- | -----
+subscription_id | The ID of the subscription. | Optional if defaulted via the --init command
+application_id | The ID of the application. | Optional if defaulted via the --init command
+object_id | The ID of the configuration object. | Required.
+environment_id | The ID of the environment. | Optional if defaulted via the --init command
 
 <aside class="notice">
 Requires write permission as a configuration object user, else subscription admin privilege or application admin privilege.
@@ -686,7 +716,7 @@ Requires write permission as a configuration object user, else subscription admi
 > To retrieve configuration data, use this code:
 
 ```shell
-cloco --get-cob --sub <subscription_id> --cob <application_id>/<object_id>/<environment_id>
+cloco --get-cob --sub <subscription_id> --app <application_id> --cob <object_id> --env <environment_id>
 
 # Alternatively, use curl:
 curl https://api.cloco.io/<subscription_id>/configuration/<application_id>/<object_id>/<environment_id> --header Content-Type:application/json --header "Authorization:Bearer <token>"
@@ -713,12 +743,12 @@ This command retrieves the configuration object, wrapper in the metadata.  Note 
 
 ### URL Parameters
 
-Parameter | Description
---------- | -----------
-subscription_id | The ID of the subscription.
-application_id | The ID of the application.
-object_id | The ID of the configuration object.
-environment_id | The ID of the environment.
+Parameter | Description | Usage
+--------- | ----------- | -----
+subscription_id | The ID of the subscription. | Optional if defaulted via the --init command
+application_id | The ID of the application. | Optional if defaulted via the --init command
+object_id | The ID of the configuration object. | Required.
+environment_id | The ID of the environment. | Optional if defaulted via the --init command
 
 <aside class="notice">
 Requires read or write permission as a configuration object user, else subscription admin privilege or application admin privilege.
@@ -729,7 +759,7 @@ Requires read or write permission as a configuration object user, else subscript
 > To list the versions of your configuration object, use this code:
 
 ```shell
-cloco --get-history --sub <subscription_id> --cob <application_id>/<object_id>/<environment_id>
+cloco --get-history --sub <subscription_id> --app <application_id> --cob <object_id> --env <environment_id>
 
 # Alternatively, use curl:
 curl https://api.cloco.io/<subscription_id>/configuration/versions/<application_id>/<object_id>/<environment_id>  --header Content-Type:application/json --header "Authorization:Bearer <token>"
@@ -757,12 +787,12 @@ This command retrieves the headers (but not the configuration data) of the confi
 
 ### URL Parameters
 
-Parameter | Description
---------- | -----------
-subscription_id | The ID of the subscription.
-application_id | The ID of the application.
-object_id | The ID of the configuration object.
-environment_id | The ID of the environment.
+Parameter | Description | Usage
+--------- | ----------- | -----
+subscription_id | The ID of the subscription. | Optional if defaulted via the --init command
+application_id | The ID of the application. | Optional if defaulted via the --init command
+object_id | The ID of the configuration object. | Required.
+environment_id | The ID of the environment. | Optional if defaulted via the --init command
 
 <aside class="notice">
 Requires read or write permission as a configuration object user, else subscription admin privilege or application admin privilege.
@@ -773,7 +803,7 @@ Requires read or write permission as a configuration object user, else subscript
 > To retrieve a previous version of your configuration data, use this code:
 
 ```shell
-cloco --get-version --sub <subscription_id> --cob <application_id>/<object_id>/<environment_id> ---version <version>
+cloco --get-version --sub <subscription_id> --app <application_id> --cob <object_id> --env <environment_id> ---version <version>
 
 # Alternatively, use curl:
 curl https://api.cloco.io/<subscription_id>/configuration/versions/<application_id>/<object_id>/<environment_id>/<version> --header Content-Type:application/json --header "Authorization:Bearer <token>"
@@ -800,12 +830,12 @@ This command retrieves a previous version of your data.  The requested version m
 
 ### URL Parameters
 
-Parameter | Description
---------- | -----------
-subscription_id | The ID of the subscription.
-application_id | The ID of the application.
-object_id | The ID of the configuration object.
-environment_id | The ID of the environment.
+Parameter | Description | Usage
+--------- | ----------- | -----
+subscription_id | The ID of the subscription. | Optional if defaulted via the --init command
+application_id | The ID of the application. | Optional if defaulted via the --init command
+object_id | The ID of the configuration object. | Required.
+environment_id | The ID of the environment. | Optional if defaulted via the --init command
 version | The version number of the configuration object to roll back to.
 
 <aside class="notice">
@@ -817,7 +847,7 @@ Requires read or write permission as a configuration object user, else subscript
 > To rollback your configuration data to a previous version, use this code:
 
 ```shell
-cloco --restore-version --sub <subscription_id> --cob <application_id>/<object_id>/<environment_id> ---version <version>
+cloco --restore-version --sub <subscription_id> --app <application_id> --cob <object_id> --env <environment_id> ---version <version>
 
 # Alternatively, use curl:
 curl -X PUT https://api.cloco.io/<subscription_id>/configuration/versions/<application_id>/<object_id>/<environment_id>/<version> --header Content-Type:application/json --header "Authorization:Bearer <token>"
@@ -829,12 +859,12 @@ This command rolls back your data to a previous version.  The previous history w
 
 ### URL Parameters
 
-Parameter | Description
---------- | -----------
-subscription_id | The ID of the subscription.
-application_id | The ID of the application.
-object_id | The ID of the configuration object.
-environment_id | The ID of the environment.
+Parameter | Description | Usage
+--------- | ----------- | -----
+subscription_id | The ID of the subscription. | Optional if defaulted via the --init command
+application_id | The ID of the application. | Optional if defaulted via the --init command
+object_id | The ID of the configuration object. | Required.
+environment_id | The ID of the environment. | Optional if defaulted via the --init command
 version | The version number of the configuration object to roll back to.
 
 <aside class="warning">
@@ -850,7 +880,7 @@ Requires write permission as a configuration object user, else subscription admi
 > To list the configuration object users, use this code:
 
 ```shell
-cloco --list-cob-users --sub <subscription_id> --cob <application_id>/<object_id>/<environment_id>
+cloco --list-cob-users --sub <subscription_id> --app <application_id> --cob <object_id> --env <environment_id>
 
 # Alternatively, use curl:
 curl https://api.cloco.io/<subscription_id>/configuration/<application_id>/<object_id>/<environment_id>/users --header Content-Type:application/json --header "Authorization:Bearer <token>"
@@ -861,7 +891,7 @@ curl https://api.cloco.io/<subscription_id>/configuration/<application_id>/<obje
 ```json
 [
   {
-    "identity": "<email>",
+    "identity": "<username>",
     "permissionLevel": "admin|user"
   }
 ]
@@ -871,12 +901,12 @@ This command lets you list all of the users that are presently assigned to the c
 
 ### URL Parameters
 
-Parameter | Description
---------- | -----------
-subscription_id | The ID of the subscription.
-application_id | The ID of the application.
-object_id | The ID of the configuration object.
-environment_id | The ID of the environment.
+Parameter | Description | Usage
+--------- | ----------- | -----
+subscription_id | The ID of the subscription. | Optional if defaulted via the --init command
+application_id | The ID of the application. | Optional if defaulted via the --init command
+object_id | The ID of the configuration object. | Required.
+environment_id | The ID of the environment. | Optional if defaulted via the --init command
 
 <aside class="notice">
 Requires subscription admin privilege or application admin privilege.
@@ -888,32 +918,32 @@ Requires subscription admin privilege or application admin privilege.
 > To add a configuration object user, use this code:
 
 ```shell
-cloco --add-cob-user --sub <subscription_id> --cob <application_id>/<object_id>/<environment_id> -u <email> -r "read|write"
+cloco --add-cob-user --sub <subscription_id> --app <application_id> --cob <object_id> --env <environment_id> -u <username> -r "read|write"
 
 # Alternatively, use curl:
-curl -X POST --data $json https://api.cloco.io/<subscription_id>/configuration/<application_id>/<object_id>/<environment_id>/users/<email> --header Content-Type:application/json --header "Authorization:Bearer <token>"
+curl -X POST --data $json https://api.cloco.io/<subscription_id>/configuration/<application_id>/<object_id>/<environment_id>/users/<username> --header Content-Type:application/json --header "Authorization:Bearer <token>"
 ```
 
 > The above command requires JSON structured like this:
 
 ```json
 {
-  "identity": "<email>",
+  "identity": "<username>",
   "permissionLevel": "admin|user"
 }
 ```
 
-This command lets you add a cloco user to the configuration object via their email address.  Note that this applies to a single configuration object in a single application, referencing a single application.
+This command lets you add a cloco user to the configuration object via their username.  Note that this applies to a single configuration object in a single application, referencing a single application.
 
 ### URL Parameters
 
-Parameter | Description
---------- | -----------
-subscription_id | The ID of the subscription.
-application_id | The ID of the application.
-object_id | The ID of the configuration object.
-environment_id | The ID of the environment.
-email | The identity email of the user to remove.
+Parameter | Description | Usage
+--------- | ----------- | -----
+subscription_id | The ID of the subscription. | Optional if defaulted via the --init command
+application_id | The ID of the application. | Optional if defaulted via the --init command
+object_id | The ID of the configuration object. | Required.
+environment_id | The ID of the environment. | Optional if defaulted via the --init command
+username | The identity of the user to remove.
 
 <aside class="warning">
 You cannot remove yourself from the configuration object.  If you want to do this you must first ensure another admin is present within the application and then get them to remove you.
@@ -929,23 +959,23 @@ Requires subscription admin privilege or application admin privilege.
 > To remove a configuration object user, use this code:
 
 ```shell
-cloco --rm-cob-user --sub <subscription_id> --cob <application_id>/<object_id>/<environment_id> -u <email>
+cloco --rm-cob-user --sub <subscription_id> --app <application_id> --cob <object_id> --env <environment_id> -u <username>
 
 # Alternatively, use curl:
-curl -X DELETE --data $json https://api.cloco.io/<subscription_id>/configuration/<application_id>/<object_id>/<environment_id>/users/<email> --header Content-Type:application/json --header "Authorization:Bearer <token>"
+curl -X DELETE --data $json https://api.cloco.io/<subscription_id>/configuration/<application_id>/<object_id>/<environment_id>/users/<username> --header Content-Type:application/json --header "Authorization:Bearer <token>"
 ```
 
-This command lets you remove a cloco user from the configuration object via their email address.  Note that this applies to a single configuration object in a single application, referencing a single application.
+This command lets you remove a cloco user from the configuration object via their username.  Note that this applies to a single configuration object in a single application, referencing a single application.
 
 ### URL Parameters
 
-Parameter | Description
---------- | -----------
-subscription_id | The ID of the subscription.
-application_id | The ID of the application.
-object_id | The ID of the configuration object.
-environment_id | The ID of the environment.
-email | The identity email of the user to remove.
+Parameter | Description | Usage
+--------- | ----------- | -----
+subscription_id | The ID of the subscription. | Optional if defaulted via the --init command
+application_id | The ID of the application. | Optional if defaulted via the --init command
+object_id | The ID of the configuration object. | Required.
+environment_id | The ID of the environment. | Optional if defaulted via the --init command
+username | The identity of the user to remove.
 
 <aside class="warning">
 You cannot remove yourself from the configuration object.  If you want to do this you must first ensure another admin is present within the application and then get them to remove you.

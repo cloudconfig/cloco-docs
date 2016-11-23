@@ -38,6 +38,7 @@ You're going to need:
 ```shell
 # either run this to run locally
 bundle install
+bundle exec middleman build --clean
 bundle exec middleman server
 
 # OR run this to run with vagrant
