@@ -690,7 +690,7 @@ Requires subscription admin privilege or application admin privilege.
 > To save configuration data, use this code:
 
 ```shell
-cloco --get-app --sub <subscription_id> --app <application_id> --cob <object_id> --env <environment_id> --file <path_to_data_file>
+cloco --save-cob --sub <subscription_id> --app <application_id> --cob <object_id> --env <environment_id> --file <path_to_configuration_data> --mime-type <mime type>
 
 # Alternatively, use curl:
 curl -X PUT --data @<path_to_data_file> https://api.cloco.io/<subscription_id>/configuration/<application_id>/<object_id>/<environment_id> --header Content-Type:application/json --header "Authorization:Bearer <token>"
@@ -708,6 +708,10 @@ subscription_id | The ID of the subscription. | Optional if defaulted via the --
 application_id | The ID of the application. | Optional if defaulted via the --init command
 object_id | The ID of the configuration object. | Required.
 environment_id | The ID of the environment. | Optional if defaulted via the --init command
+
+<aside class="notice">
+Note on MIME types:  cloco assumes that you will upload JSON data by default, but you can override this with the --mime-type switch.  For text data we recommend application/x-www-form-urlencoded.
+</aside>
 
 <aside class="notice">
 Requires write permission as a configuration object user, else subscription admin privilege or application admin privilege.
