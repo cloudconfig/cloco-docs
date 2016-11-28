@@ -983,7 +983,7 @@ Requires subscription admin privilege or application admin privilege.
 <blockquote>
 <p>To save configuration data, use this code:</p>
 </blockquote>
-<pre class="highlight shell"><code>cloco --get-app --sub &lt;subscription_id&gt; --app &lt;application_id&gt; --cob &lt;object_id&gt; --env &lt;environment_id&gt; --file &lt;path_to_data_file&gt;
+<pre class="highlight shell"><code>cloco --save-cob --sub &lt;subscription_id&gt; --app &lt;application_id&gt; --cob &lt;object_id&gt; --env &lt;environment_id&gt; --file &lt;path_to_configuration_data&gt; --mime-type &lt;mime <span class="nb">type</span>&gt;
 
 <span class="c"># Alternatively, use curl:</span>
 curl -X PUT --data @&lt;path_to_data_file&gt; https://api.cloco.io/&lt;subscription_id&gt;/configuration/&lt;application_id&gt;/&lt;object_id&gt;/&lt;environment_id&gt; --header Content-Type:application/json --header <span class="s2">"Authorization:Bearer &lt;token&gt;"</span>
@@ -1025,6 +1025,10 @@ curl -X PUT --data @&lt;path_to_data_file&gt; https://api.cloco.io/&lt;subscript
 <td>Optional if defaulted via the &ndash;init command</td>
 </tr>
 </tbody></table>
+
+<aside class="notice">
+Note on MIME types:  cloco assumes that you will upload JSON data by default, but you can override this with the &ndash;mime-type switch.  For text data we recommend application/x-www-form-urlencoded.
+</aside>
 
 <aside class="notice">
 Requires write permission as a configuration object user, else subscription admin privilege or application admin privilege.
