@@ -983,7 +983,7 @@ Requires subscription admin privilege or application admin privilege.
 <blockquote>
 <p>To save configuration data, use this code:</p>
 </blockquote>
-<pre class="highlight shell"><code>cloco --save-cob --sub &lt;subscription_id&gt; --app &lt;application_id&gt; --cob &lt;object_id&gt; --env &lt;environment_id&gt; --file &lt;path_to_configuration_data&gt; --mime-type &lt;mime <span class="nb">type</span>&gt;
+<pre class="highlight shell"><code>cloco --save-cob --sub &lt;subscription_id&gt; --app &lt;application_id&gt; --cob &lt;object_id&gt; --env &lt;environment_id&gt; --file &lt;path_to_configuration_data&gt; <span class="o">[</span>--mime-type &lt;mime <span class="nb">type</span>&gt;] <span class="o">[</span>--passphrase|-p &lt;encryption passphrase&gt;]
 
 <span class="c"># Alternatively, use curl:</span>
 curl -X PUT --data @&lt;path_to_data_file&gt; https://api.cloco.io/&lt;subscription_id&gt;/configuration/&lt;application_id&gt;/&lt;object_id&gt;/&lt;environment_id&gt; --header Content-Type:application/json --header <span class="s2">"Authorization:Bearer &lt;token&gt;"</span>
@@ -1031,6 +1031,10 @@ Note on MIME types:  cloco assumes that you will upload JSON data by default, bu
 </aside>
 
 <aside class="notice">
+Note on encryption:  if the passphrase switch (&ndash;passphrase | -p) is used the configuration will be encrypted using AES256 and uploaded as base64-encoded binary.
+</aside>
+
+<aside class="notice">
 Requires write permission as a configuration object user, else subscription admin privilege or application admin privilege.
 </aside>
 
@@ -1039,7 +1043,7 @@ Requires write permission as a configuration object user, else subscription admi
 <blockquote>
 <p>To retrieve configuration data, use this code:</p>
 </blockquote>
-<pre class="highlight shell"><code>cloco --get-cob --sub &lt;subscription_id&gt; --app &lt;application_id&gt; --cob &lt;object_id&gt; --env &lt;environment_id&gt;
+<pre class="highlight shell"><code>cloco --get-cob --sub &lt;subscription_id&gt; --app &lt;application_id&gt; --cob &lt;object_id&gt; --env &lt;environment_id&gt; <span class="o">[</span>--passphrase|-p &lt;encryption passphrase&gt;]
 
 <span class="c"># Alternatively, use curl:</span>
 curl https://api.cloco.io/&lt;subscription_id&gt;/configuration/&lt;application_id&gt;/&lt;object_id&gt;/&lt;environment_id&gt; --header Content-Type:application/json --header <span class="s2">"Authorization:Bearer &lt;token&gt;"</span>
@@ -1094,6 +1098,10 @@ curl https://api.cloco.io/&lt;subscription_id&gt;/configuration/&lt;application_
 <td>Optional if defaulted via the &ndash;init command</td>
 </tr>
 </tbody></table>
+
+<aside class="notice">
+Note on encryption:  if the passphrase switch (&ndash;passphrase | -p) is used the configuration will be decrypted using AES256 and assumes that the configuration data downloaded is base64-encoded binary.
+</aside>
 
 <aside class="notice">
 Requires read or write permission as a configuration object user, else subscription admin privilege or application admin privilege.
