@@ -690,7 +690,7 @@ Requires subscription admin privilege or application admin privilege.
 > To save configuration data, use this code:
 
 ```shell
-cloco --save-cob --sub <subscription_id> --app <application_id> --cob <object_id> --env <environment_id> --file <path_to_configuration_data> --mime-type <mime type>
+cloco --save-cob --sub <subscription_id> --app <application_id> --cob <object_id> --env <environment_id> --file <path_to_configuration_data> [--mime-type <mime type>] [--passphrase|-p <encryption passphrase>]
 
 # Alternatively, use curl:
 curl -X PUT --data @<path_to_data_file> https://api.cloco.io/<subscription_id>/configuration/<application_id>/<object_id>/<environment_id> --header Content-Type:application/json --header "Authorization:Bearer <token>"
@@ -714,6 +714,10 @@ Note on MIME types:  cloco assumes that you will upload JSON data by default, bu
 </aside>
 
 <aside class="notice">
+Note on encryption:  if the passphrase switch (--passphrase | -p) is used the configuration will be encrypted using AES256 and uploaded as base64-encoded binary.
+</aside>
+
+<aside class="notice">
 Requires write permission as a configuration object user, else subscription admin privilege or application admin privilege.
 </aside>
 
@@ -722,7 +726,7 @@ Requires write permission as a configuration object user, else subscription admi
 > To retrieve configuration data, use this code:
 
 ```shell
-cloco --get-cob --sub <subscription_id> --app <application_id> --cob <object_id> --env <environment_id>
+cloco --get-cob --sub <subscription_id> --app <application_id> --cob <object_id> --env <environment_id> [--passphrase|-p <encryption passphrase>]
 
 # Alternatively, use curl:
 curl https://api.cloco.io/<subscription_id>/configuration/<application_id>/<object_id>/<environment_id> --header Content-Type:application/json --header "Authorization:Bearer <token>"
@@ -755,6 +759,10 @@ subscription_id | The ID of the subscription. | Optional if defaulted via the --
 application_id | The ID of the application. | Optional if defaulted via the --init command
 object_id | The ID of the configuration object. | Required.
 environment_id | The ID of the environment. | Optional if defaulted via the --init command
+
+<aside class="notice">
+Note on encryption:  if the passphrase switch (--passphrase | -p) is used the configuration will be decrypted using AES256 and assumes that the configuration data downloaded is base64-encoded binary.
+</aside>
 
 <aside class="notice">
 Requires read or write permission as a configuration object user, else subscription admin privilege or application admin privilege.
