@@ -91,7 +91,7 @@
       <script src="javascripts/all.js"></script>
   </head>
 
-  <body class="index" data-languages="[&quot;shell&quot;]">
+  <body class="index" data-languages="[&quot;shell&quot;,&quot;javascript&quot;]">
     <a href="#" id="nav-button">
       <span>
         NAV
@@ -104,6 +104,7 @@
       </div>
         <div class="lang-selector">
               <a href="#" data-language-name="shell">shell</a>
+              <a href="#" data-language-name="javascript">javascript</a>
         </div>
         <div class="search">
           <input type="text" class="search" id="input-search" placeholder="Search">
@@ -120,7 +121,8 @@
     <div class="page-wrapper">
       <div class="dark-box"></div>
       <div class="content">
-        <h1 id="introduction">Introduction</h1>
+        
+          <h1 id="introduction">Introduction</h1>
 
 <p>Welcome to the cloco configuration-as-a-service API.  </p>
 
@@ -160,7 +162,7 @@
 
 <p>Please see the <a href="https://www.cloco.io">cloco website</a> for more information.</p>
 
-<h1 id="installation">Installation</h1>
+          <h1 id="installation">Installation</h1>
 
 <h2 id="cloco-auth">cloco-auth</h2>
 
@@ -225,7 +227,7 @@ cloco --init --url &lt;api url&gt;
 Note that these are saved against the logged on user&rsquo;s profile, so if you are initializing for an application you will need to execute these using the same user as the application will run under.
 </aside>
 
-<h1 id="user-accounts">User Accounts</h1>
+          <h1 id="user-accounts">User Accounts</h1>
 
 <h2 id="signup">Signup</h2>
 
@@ -262,7 +264,7 @@ curl https://api.cloco.io/me  --header Content-Type:application/json --header <s
 
 <p>To check the cloco account you&rsquo;re logged in under, use the /me route.</p>
 
-<h1 id="subscription-management">Subscription Management</h1>
+          <h1 id="subscription-management">Subscription Management</h1>
 
 <p>In cloco a subscription is where a team of people can manage configuration data together.</p>
 
@@ -480,7 +482,7 @@ You cannot remove yourself from the subscription.  If you want to do this you mu
 Requires subscription admin privilege.
 </aside>
 
-<h1 id="application-management">Application Management</h1>
+          <h1 id="application-management">Application Management</h1>
 
 <p>Within cloco the data stored for an application is metadata - this helps us manage the application data for you and verify that permissions and environments are correct.</p>
 
@@ -867,7 +869,7 @@ You cannot remove yourself from the application.  If you want to do this you mus
 Requires subscription admin privilege or application admin privilege.
 </aside>
 
-<h1 id="configuration-objects">Configuration Objects</h1>
+          <h1 id="configuration-objects">Configuration Objects</h1>
 
 <p>When you work with configuration objects in the cloco API, you are storing or retrieving configuration data.  This is where you will set the configuration that your applications will consume, or your applications will use these operations to retrieve their configuration.</p>
 
@@ -1538,10 +1540,281 @@ Requires subscription admin privilege or application admin privilege.
 </tr>
 </tbody></table>
 
+          <h1 id="nodejs-client">NodeJS Client</h1>
+
+<p>The cloco node client pulls all the configuration for your application from the cloco API and makes it accessible to your application.  In order to use the cloco node client you will need the following:</p>
+
+<ul>
+<li>A cloco subscription (account).</li>
+<li>You will have created an application in cloco.</li>
+<li>You will have uploaded configuration for the application.</li>
+<li>To use the shell commands you will have downloaded and installed the <a href="https://github.com/cloudconfig/cloco-bash">cloco-bash</a> shell.</li>
+<li>You will either have authorized your machine as described above, or you will have generated client credentials.</li>
+</ul>
+
+<p>For a working example of the cloco node client please see the <a href="https://github.com/cloudconfig/cloco-node-example">cloco-node-example</a> project on GitHub.</p>
+
+<h2 id="installation">Installation</h2>
+<pre class="highlight shell"><code>npm install cloco-node-client --save
+</code></pre>
+
+<p>Cloco has a NodeJS client available on NPM.  Install this into your node project to integrate cloco seamlessly into your app.</p>
+
+<p>Use the javascript tab on the right to see the examples.</p>
+
+<h2 id="options">Options</h2>
+<pre class="highlight javascript"><code><span class="c1">// cloco initialization options.  See below for a description of all the options.</span>
+<span class="kd">var</span> <span class="nx">options</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">subscription</span><span class="p">:</span> <span class="s1">'my-cloco-subscription'</span><span class="p">,</span>
+  <span class="na">application</span><span class="p">:</span> <span class="s1">'cloco-cafe'</span><span class="p">,</span>
+  <span class="na">environment</span><span class="p">:</span> <span class="s1">'dev'</span><span class="p">,</span>
+  <span class="na">ttl</span><span class="p">:</span> <span class="mi">60</span>
+<span class="p">};</span>
+</code></pre>
+
+<p>The cloco options are where you configure the settings, and therefore how you connect the cloco node client to the cloco API.</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Usage</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>application</td>
+<td>The ID of the cloco application.</td>
+<td>Optional, but if not supplied this will be taken from the machine default (set via <a href="https://github.com/cloudconfig/cloco-bash">cloco-bash</a>).</td>
+</tr>
+<tr>
+<td>cacheCheckInterval</td>
+<td>The time in milliseconds between checking for expired configuration in the cache.</td>
+<td>Optional, defaults to 5000ms.</td>
+</tr>
+<tr>
+<td>credentials</td>
+<td>The credentials to use to access cloco.</td>
+<td>Optional, but if not supplied will use the machine credentials.  See Credentials section below.</td>
+</tr>
+<tr>
+<td>encryptor</td>
+<td>The encryption algorithm.</td>
+<td>Optional, by default this will be a passthrough encryptor (i.e. will not encrypt).  See Encryption section below for more information.</td>
+</tr>
+<tr>
+<td>environment</td>
+<td>The deployment environment.</td>
+<td>Optional, but if not supplied will use the machine default.</td>
+</tr>
+<tr>
+<td>log</td>
+<td>The log provider.</td>
+<td>Optional.  Defaults to a new bunyan.Logger with basic settings.  See Logging section for more information.</td>
+</tr>
+<tr>
+<td>subscription</td>
+<td>The name of your cloco subscription.</td>
+<td>Optional, but if not supplied will use the machine default.</td>
+</tr>
+<tr>
+<td>ttl</td>
+<td>The time in seconds for items to live in the cache before refreshing.</td>
+<td>Optional, if not supplied then cache items will never expire.</td>
+</tr>
+<tr>
+<td>url</td>
+<td>The cloco API url.</td>
+<td>Optional.  Will default to the public hosted cloco API.  Use this to override for on-premise installations of cloco.</td>
+</tr>
+<tr>
+<td>useDiskCaching</td>
+<td>Indicates whether disk caching is used.</td>
+<td>Optional.  Will default to false.  When set to true any information received from the API will be saved to disk, and will be loaded from disk on app start if the API cannot be contacted.</td>
+</tr>
+</tbody></table>
+
+<h2 id="setting-the-subscription">Setting the Subscription</h2>
+<pre class="highlight shell"><code>cloco --init --sub my-cloco-subscription
+</code></pre>
+<pre class="highlight javascript"><code><span class="nx">options</span><span class="p">.</span><span class="nx">subscription</span> <span class="o">=</span> <span class="s1">'my-cloco-subscription'</span><span class="p">;</span>
+</code></pre>
+
+<p>You need to specify the identifier of your cloco subscription as the cloco REST API requires this as a URL parameter.  </p>
+
+<h2 id="setting-the-application">Setting the Application</h2>
+<pre class="highlight shell"><code>cloco --init --app my-application
+</code></pre>
+<pre class="highlight javascript"><code><span class="nx">options</span><span class="p">.</span><span class="nx">application</span> <span class="o">=</span> <span class="s1">'my-application'</span><span class="p">;</span>
+</code></pre>
+
+<p>You need to specify the identifier of your cloco application as the cloco REST API requires this as a URL parameter.  </p>
+
+<h2 id="setting-the-environment">Setting the Environment</h2>
+<pre class="highlight shell"><code>cloco --init --env dev|test|staging|production
+</code></pre>
+<pre class="highlight javascript"><code><span class="nx">options</span><span class="p">.</span><span class="nx">environment</span> <span class="o">=</span> <span class="s1">'dev'</span><span class="p">;</span> <span class="c1">// this should be configured per environment.</span>
+</code></pre>
+
+<p>You need to specify the environment that your application is running in, and the appropriate configuration for the environment will be loaded.  You can have different settings depending on the environment.</p>
+
+<aside class="notice">
+Your DevOps processes can initialize the environment at deployment time using the shell.
+</aside>
+
+<h2 id="setting-the-credentials">Setting the Credentials</h2>
+<pre class="highlight javascript"><code><span class="c1">// initialize the credentials if supplied via environment variables.</span>
+<span class="k">if</span> <span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">CLOCO_CLIENT_KEY</span> <span class="o">&amp;&amp;</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">CLOCO_CLIENT_SECRET</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">options</span><span class="p">.</span><span class="nx">credentials</span> <span class="o">=</span> <span class="p">{</span> <span class="na">key</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">CLOCO_CLIENT_KEY</span><span class="p">,</span> <span class="na">secret</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">CLOCO_CLIENT_SECRET</span> <span class="p">};</span>
+<span class="p">}</span>
+</code></pre>
+
+<p>You can authorize a machine using the cloco-auth tool to receive a refresh token, in which case credentials are not required to be passed in the options.</p>
+
+<p>If you have not authorized your machine then you need to pass the credentials to the cloco client, and the client will then obtain an access token from the API.</p>
+
+<h2 id="setting-the-api-url">Setting the API URL</h2>
+<pre class="highlight shell"><code>cloco --init --url https://my-on-premise-cloco-url
+</code></pre>
+<pre class="highlight javascript"><code><span class="nx">options</span><span class="p">.</span><span class="nx">url</span> <span class="o">=</span> <span class="s1">'https://my-on-premise-cloco-url'</span><span class="p">;</span>
+</code></pre>
+
+<p>You can run the cloco-node-client against the hosted cloco API or you can obtain your own on-premise or cloud hosted version of cloco.  If you need to change from the default hosted cloco API you can do this by passing in the URL parameter in the options or setting this at a machine level using the shell command.</p>
+
+<h2 id="logging">Logging</h2>
+<pre class="highlight javascript"><code><span class="c1">// set up the logging.</span>
+<span class="kd">var</span> <span class="nx">bunyan</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'bunyan'</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">logger</span> <span class="o">=</span> <span class="nx">bunyan</span><span class="p">.</span><span class="nx">createLogger</span><span class="p">({</span><span class="na">name</span><span class="p">:</span> <span class="s1">'cloco-node-example'</span><span class="p">,</span> <span class="na">level</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">CLOCO_LOG_LEVEL</span> <span class="o">||</span> <span class="s2">"info"</span><span class="p">});</span>
+<span class="nx">options</span><span class="p">.</span><span class="nx">log</span> <span class="o">=</span> <span class="nx">logger</span><span class="p">;</span>
+</code></pre>
+
+<p>The cloco node client uses bunyan as the default logger.  You can pass in your own instance of bunyan, else the cloco node client will create one for you when it starts up.  Using your own instance is preferable as you can control the verbosity of the logging.</p>
+
+<p>If you wish to use another logging framework other than bunyan you need to make sure that the logger assigned conforms to the bunyan interface, or else you will need to wrap your own logger to make it compliant.</p>
+
+<h2 id="encryption">Encryption</h2>
+<pre class="highlight javascript"><code><span class="c1">// check for the encryption key as an environment variable, and if set then use the encryption option.</span>
+<span class="k">if</span> <span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">CLOCO_ENCRYPTION_KEY</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">options</span><span class="p">.</span><span class="nx">encryptor</span> <span class="o">=</span> <span class="nx">cloco</span><span class="p">.</span><span class="nx">createAesEncryptor</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">CLOCO_ENCRYPTION_KEY</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre>
+
+<p>To use cloco without any encryption simply leave the encryptor option undefined.</p>
+
+<p>We recommend that you always encrypt your configuration when you read / write to the API.  In this way we never have access to your configuration data so you can be sure that it is secured.</p>
+
+<p>Cloco ships with an AES256 encryption algorithm as standard, and you can upload new encrypted configuration using the cloco bash shell.  To use the default encryption you just need to supply an encryption key.</p>
+
+<h3 id="custom-encryption">Custom Encryption</h3>
+
+<p>If you wish to use your own encryption algorithm, you can write your own code for this and pass it into the options as the encryptor.  Ensure the method dignatures match the required interface.</p>
+
+<blockquote>
+<p>To roll your own encryption algorithm, create an encryptor that conforms to the following interface:</p>
+</blockquote>
+<pre class="highlight plaintext"><code>export interface IEncryptor {
+
+  /**
+   * Encrypts the given string into a string.
+   * @type {string}
+   */
+  encrypt(data: string): string;
+
+  /**
+   * Decrypts the given string.
+   * @param  {string} encrypted The encrypted data.
+   * @return {string}           The decrypted data.
+   */
+  decrypt(encrypted: string): string;
+
+}
+</code></pre>
+<pre class="highlight javascript"><code><span class="kd">var</span> <span class="nx">customEncryptor</span> <span class="o">=</span> <span class="p">{};</span>
+<span class="nx">customEncryptor</span><span class="p">.</span><span class="nx">encrypt</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// encrypt in here.</span>
+<span class="p">};</span>
+<span class="nx">customEncryptor</span><span class="p">.</span><span class="nx">decrypt</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">encrypted</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// decrypt in here.</span>
+<span class="p">};</span>
+<span class="nx">options</span><span class="p">.</span><span class="nx">encryptor</span> <span class="o">=</span> <span class="nx">customEncryptor</span><span class="p">;</span>
+</code></pre>
+
+<h2 id="offline-usage">Offline Usage</h2>
+<pre class="highlight javascript"><code><span class="c1">// set useDiskCaching to true to use cloco offline.</span>
+<span class="nx">options</span><span class="p">.</span><span class="nx">useDiskCaching</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+</code></pre>
+
+<p>The cloco client can be used even when access to the cloco API is intermittent or disrupted.  To use this option you should turn on the disk caching option.  Whenever new data is downloaded from the cloco API it will be stored on disk and if the cloco node client is unable to connect to the cloco API the last disk version will be used instead.</p>
+<pre class="highlight shell"><code>cloco --get-app --sub my-cloco-subscription --app my-application &gt; ~/.cloco/cache/application_my-application
+
+cloco --get-cob --sub my-cloco-subscription --app my-application --cob my-configuration-object --env dev &gt; ~/.cloco/cache/configuration_my-application_my-configuration-object_dev
+</code></pre>
+
+<p>Your DevOps scripts can also prime the client by deploying a version of the configuration onto disk before first use.  In this case you will never need to connect to the API to download the configuration.</p>
+
+<p>Note that the configuration data on disk will use the same encryption as the API.</p>
+
+<h2 id="expiry-and-refresh">Expiry and Refresh</h2>
+<pre class="highlight javascript"><code><span class="nx">options</span><span class="p">.</span><span class="nx">ttl</span> <span class="o">=</span> <span class="mi">60</span><span class="p">;</span>  <span class="c1">// seconds before an item in cache expires.</span>
+<span class="nx">options</span><span class="p">.</span><span class="nx">cacheCheckInterval</span> <span class="o">=</span> <span class="mi">5000</span><span class="p">;</span>  <span class="c1">// milliseconds between checks for expired cache items.</span>
+</code></pre>
+
+<p>cloco anticipates that configuration for an application can change as required during normal running, and this should not require restart of the application.  When an item of configuration is downloaded from the API cloco sets an expiry time on the configuration.  Once the expiry time has expired cloco will attempt to load a fresh copy of the configuration from the API, and if it has changed will updated the version cached in memory.</p>
+
+<h2 id="creating-the-client">Creating the Client</h2>
+<pre class="highlight javascript"><code><span class="kd">var</span> <span class="nx">client</span> <span class="o">=</span> <span class="nx">cloco</span><span class="p">.</span><span class="nx">createClient</span><span class="p">(</span><span class="nx">options</span><span class="p">);</span>
+<span class="nx">client</span><span class="p">.</span><span class="nx">init</span><span class="p">()</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">logger</span><span class="p">.</span><span class="nx">debug</span><span class="p">(</span><span class="s2">"cloco client initialized."</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre>
+
+<p>The node client is created using the options and then initialized to load in the data from the API.  </p>
+
+<aside class="notice">
+The init() method on the cloco client is asynchronous and returns a promise.  This is where the data is loaded from the API, and these REST calls are asynchronous.
+</aside>
+
+<h2 id="subscribing-to-client-events">Subscribing to Client Events</h2>
+<pre class="highlight javascript"><code><span class="nx">client</span><span class="p">.</span><span class="nx">onConfigurationLoaded</span><span class="p">.</span><span class="nx">subscribe</span><span class="p">((</span><span class="nx">sender</span><span class="p">,</span> <span class="nx">arg</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="c1">// update an object dynamically</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">arg</span><span class="p">.</span><span class="nx">key</span> <span class="o">===</span> <span class="s2">"menu"</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">menu</span> <span class="o">=</span> <span class="nx">arg</span><span class="p">.</span><span class="nx">value</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="c1">// change the log level dynamically</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">arg</span><span class="p">.</span><span class="nx">key</span> <span class="o">===</span> <span class="s2">"logging"</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">logger</span><span class="p">.</span><span class="nx">level</span><span class="p">(</span><span class="nx">arg</span><span class="p">.</span><span class="nx">value</span><span class="p">.</span><span class="nx">log_level</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+</code></pre>
+
+<p>The cloco client has events that you can subscribe to, allowing your application to be notified of changes in the client.</p>
+
+<table><thead>
+<tr>
+<th>Event</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>onConfigurationLoaded</td>
+<td>Fires when new configuration is received from the API.  The configuration is exposed as a key-value pair, the the key being the object identifier of your configuration and the value being the configuration data itself.  The data returned is in the format { key: &lsquo;object-identifier&rsquo;, value: { my: &#39;data&rsquo; } }.  If the format of your configuration object is marked as JSON the data will be parsed into an object and returned as the value field, else the data will be returned as a string.</td>
+</tr>
+<tr>
+<td>onCacheExpired</td>
+<td>Fires when an item in cache is marked as stale.  The cloco client will automatically attempt to reload the configuration when this event fires, but you can also subscribe to it.  The argument returned is in the same format as for onConfigurationLoaded.</td>
+</tr>
+<tr>
+<td>onError</td>
+<td>Fires when an error is encountered during processing.  The cloco client will continue to run, but you can subscribe to this to report any errors.  The argument returned is a JavaScript error object.</td>
+</tr>
+</tbody></table>
+
       </div>
       <div class="dark-box">
           <div class="lang-selector">
                 <a href="#" data-language-name="shell">shell</a>
+                <a href="#" data-language-name="javascript">javascript</a>
           </div>
       </div>
     </div>
