@@ -1,0 +1,24 @@
+{
+  "name": "cloco-docs",
+  "version": "1.0.0",
+  "description": "cloco documentation",
+  "scripts": {
+    "build": "bundle exec middleman build --clean",
+    "start": "bundle exec middleman server",
+    "deploy": "bash ./deploy.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cloudconfig/cloco-docs.git"
+  },
+  "keywords": [
+    "cloco",
+    "configuration-as-a-service"
+  ],
+  "author": "345andrew",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cloudconfig/cloco-docs/issues"
+  },
+  "homepage": "https://github.com/cloudconfig/cloco-docs#readme"
+}
