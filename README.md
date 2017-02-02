@@ -2,8 +2,7 @@
   <img src="https://raw.githubusercontent.com/cloudconfig/cloco-docs/master/source/images/logo.png" width="100" height="104" />
 </p>
 
-cloco-docs
-------------------------------
+# cloco-docs
 
 Welcome to cloco-docs, the documentation repo for the cloco API.  This is an opensource documentation repo and we welcome contributions from the cloco user community.
 
