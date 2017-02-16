@@ -84,7 +84,7 @@ Requires subscription admin privilege.
 cloco --list-users --sub <subscription_id>
 
 # Alternatively, use curl:
-curl https://api.cloco.io/<subscription_id>/users --header Content-Type:application/json --header "Authorization:Bearer <token>"
+curl https://api.cloco.io/<subscription_id>/permissions --header Content-Type:application/json --header "Authorization:Bearer <token>"
 ```
 
 > The above command returns JSON array structured like this:
@@ -118,7 +118,7 @@ Requires subscription admin privilege.
 cloco --add-user --sub <subscription_id> -u <username> -r admin|user
 
 # Alternatively, use curl:
-curl -X POST --data $json https://api.cloco.io/<subscription_id>/users --header Content-Type:application/json --header "Authorization:Bearer <token>"
+curl -X POST --data $json https://api.cloco.io/<subscription_id>/permissions --header Content-Type:application/json --header "Authorization:Bearer <token>"
 ```
 
 > The above command requires JSON structured like this:
@@ -152,7 +152,7 @@ Requires subscription admin privilege.
 cloco --rm-user --sub <subscription_id> -u <username>
 
 # Alternatively, use curl:
-curl -X DELETE --data $json https://api.cloco.io/<subscription_id>/users/<username> --header Content-Type:application/json --header "Authorization:Bearer <token>"
+curl -X DELETE --data $json https://api.cloco.io/<subscription_id>/permissions/<username> --header Content-Type:application/json --header "Authorization:Bearer <token>"
 ```
 
 This command lets you remove a cloco user from the subscription via their username.  
