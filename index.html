@@ -362,7 +362,7 @@ Requires subscription admin privilege.
 <pre class="highlight shell"><code>cloco --list-users --sub &lt;subscription_id&gt;
 
 <span class="c"># Alternatively, use curl:</span>
-curl https://api.cloco.io/&lt;subscription_id&gt;/users --header Content-Type:application/json --header <span class="s2">"Authorization:Bearer &lt;token&gt;"</span>
+curl https://api.cloco.io/&lt;subscription_id&gt;/permissions --header Content-Type:application/json --header <span class="s2">"Authorization:Bearer &lt;token&gt;"</span>
 </code></pre>
 
 <blockquote>
@@ -406,7 +406,7 @@ Requires subscription admin privilege.
 <pre class="highlight shell"><code>cloco --add-user --sub &lt;subscription_id&gt; -u &lt;username&gt; -r admin|user
 
 <span class="c"># Alternatively, use curl:</span>
-curl -X POST --data <span class="nv">$json</span> https://api.cloco.io/&lt;subscription_id&gt;/users --header Content-Type:application/json --header <span class="s2">"Authorization:Bearer &lt;token&gt;"</span>
+curl -X POST --data <span class="nv">$json</span> https://api.cloco.io/&lt;subscription_id&gt;/permissions --header Content-Type:application/json --header <span class="s2">"Authorization:Bearer &lt;token&gt;"</span>
 </code></pre>
 
 <blockquote>
@@ -450,7 +450,7 @@ Requires subscription admin privilege.
 <pre class="highlight shell"><code>cloco --rm-user --sub &lt;subscription_id&gt; -u &lt;username&gt;
 
 <span class="c"># Alternatively, use curl:</span>
-curl -X DELETE --data <span class="nv">$json</span> https://api.cloco.io/&lt;subscription_id&gt;/users/&lt;username&gt; --header Content-Type:application/json --header <span class="s2">"Authorization:Bearer &lt;token&gt;"</span>
+curl -X DELETE --data <span class="nv">$json</span> https://api.cloco.io/&lt;subscription_id&gt;/permissions/&lt;username&gt; --header Content-Type:application/json --header <span class="s2">"Authorization:Bearer &lt;token&gt;"</span>
 </code></pre>
 
 <p>This command lets you remove a cloco user from the subscription via their username.  </p>
@@ -736,7 +736,7 @@ Requires subscription admin privilege or application admin privilege.
 <pre class="highlight shell"><code>cloco --list-app-users --sub &lt;subscription_id&gt; --app &lt;application_id&gt;
 
 <span class="c"># Alternatively, use curl:</span>
-curl https://api.cloco.io/&lt;subscription_id&gt;/applications/&lt;application_id&gt;/users --header Content-Type:application/json --header <span class="s2">"Authorization:Bearer &lt;token&gt;"</span>
+curl https://api.cloco.io/&lt;subscription_id&gt;/applications/&lt;application_id&gt;/permissions --header Content-Type:application/json --header <span class="s2">"Authorization:Bearer &lt;token&gt;"</span>
 </code></pre>
 
 <blockquote>
@@ -785,7 +785,7 @@ Requires subscription admin privilege or application admin privilege.
 <pre class="highlight shell"><code>cloco --add-app-user --sub &lt;subscription_id&gt; --app &lt;application_id&gt; -u &lt;username&gt;
 
 <span class="c"># Alternatively, use curl:</span>
-curl -X POST --data <span class="nv">$json</span> https://api.cloco.io/&lt;subscription_id&gt;/applications/&lt;application_id&gt;/users --header Content-Type:application/json --header <span class="s2">"Authorization:Bearer &lt;token&gt;"</span>
+curl -X POST --data <span class="nv">$json</span> https://api.cloco.io/&lt;subscription_id&gt;/applications/&lt;application_id&gt;/permissions --header Content-Type:application/json --header <span class="s2">"Authorization:Bearer &lt;token&gt;"</span>
 </code></pre>
 
 <blockquote>
@@ -832,7 +832,7 @@ Requires subscription admin privilege or application admin privilege.
 <pre class="highlight shell"><code>cloco --rm-app-user --sub &lt;subscription_id&gt; --app &lt;application_id&gt; -u &lt;username&gt;
 
 <span class="c"># Alternatively, use curl:</span>
-curl -X DELETE --data <span class="nv">$json</span> https://api.cloco.io/&lt;subscription_id&gt;/applications/&lt;application_id&gt;/users/&lt;username&gt; --header Content-Type:application/json --header <span class="s2">"Authorization:Bearer &lt;token&gt;"</span>
+curl -X DELETE --data <span class="nv">$json</span> https://api.cloco.io/&lt;subscription_id&gt;/applications/&lt;application_id&gt;/permissions/&lt;username&gt; --header Content-Type:application/json --header <span class="s2">"Authorization:Bearer &lt;token&gt;"</span>
 </code></pre>
 
 <p>This command lets you remove a cloco user from the application via their username.  </p>
@@ -1316,7 +1316,7 @@ Requires write permission as a configuration object user, else subscription admi
 <pre class="highlight shell"><code>cloco --list-cob-users --sub &lt;subscription_id&gt; --app &lt;application_id&gt; --cob &lt;object_id&gt; --env &lt;environment_id&gt;
 
 <span class="c"># Alternatively, use curl:</span>
-curl https://api.cloco.io/&lt;subscription_id&gt;/configuration/&lt;application_id&gt;/&lt;object_id&gt;/&lt;environment_id&gt;/users --header Content-Type:application/json --header <span class="s2">"Authorization:Bearer &lt;token&gt;"</span>
+curl https://api.cloco.io/&lt;subscription_id&gt;/configuration/&lt;application_id&gt;/&lt;object_id&gt;/&lt;environment_id&gt;/permissions --header Content-Type:application/json --header <span class="s2">"Authorization:Bearer &lt;token&gt;"</span>
 </code></pre>
 
 <blockquote>
@@ -1375,7 +1375,7 @@ Requires subscription admin privilege or application admin privilege.
 <pre class="highlight shell"><code>cloco --add-cob-user --sub &lt;subscription_id&gt; --app &lt;application_id&gt; --cob &lt;object_id&gt; --env &lt;environment_id&gt; -u &lt;username&gt; -r <span class="s2">"read|write"</span>
 
 <span class="c"># Alternatively, use curl:</span>
-curl -X POST --data <span class="nv">$json</span> https://api.cloco.io/&lt;subscription_id&gt;/configuration/&lt;application_id&gt;/&lt;object_id&gt;/&lt;environment_id&gt;/users/&lt;username&gt; --header Content-Type:application/json --header <span class="s2">"Authorization:Bearer &lt;token&gt;"</span>
+curl -X POST --data <span class="nv">$json</span> https://api.cloco.io/&lt;subscription_id&gt;/configuration/&lt;application_id&gt;/&lt;object_id&gt;/&lt;environment_id&gt;/permissions/&lt;username&gt; --header Content-Type:application/json --header <span class="s2">"Authorization:Bearer &lt;token&gt;"</span>
 </code></pre>
 
 <blockquote>
@@ -1441,7 +1441,7 @@ Requires subscription admin privilege or application admin privilege.
 <pre class="highlight shell"><code>cloco --rm-cob-user --sub &lt;subscription_id&gt; --app &lt;application_id&gt; --cob &lt;object_id&gt; --env &lt;environment_id&gt; -u &lt;username&gt;
 
 <span class="c"># Alternatively, use curl:</span>
-curl -X DELETE --data <span class="nv">$json</span> https://api.cloco.io/&lt;subscription_id&gt;/configuration/&lt;application_id&gt;/&lt;object_id&gt;/&lt;environment_id&gt;/users/&lt;username&gt; --header Content-Type:application/json --header <span class="s2">"Authorization:Bearer &lt;token&gt;"</span>
+curl -X DELETE --data <span class="nv">$json</span> https://api.cloco.io/&lt;subscription_id&gt;/configuration/&lt;application_id&gt;/&lt;object_id&gt;/&lt;environment_id&gt;/permissions/&lt;username&gt; --header Content-Type:application/json --header <span class="s2">"Authorization:Bearer &lt;token&gt;"</span>
 </code></pre>
 
 <p>This command lets you remove a cloco user from the configuration object via their username.  Note that this applies to a single configuration object in a single application, referencing a single application.</p>
