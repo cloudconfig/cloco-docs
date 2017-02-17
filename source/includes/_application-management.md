@@ -22,7 +22,7 @@ curl https://api.cloco.io/<subscription_id>/applications  --header Content-Type:
     "coreDetails": {
       "applicationName": "My-App",
       "description": "This is a description of my app.",
-      "isDefault": "true"
+      "isFavorite": "true"
     },
     "environments": [
       {
@@ -75,7 +75,7 @@ curl -X PUT --data @<path_to_json_file> https://api.cloco.io/<subscription_id>/a
   "coreDetails": {
     "applicationName": "My-App",
     "description": "This is a description of my app.",
-    "isDefault": "true|false"
+    "isFavorite": "true|false"
   },
   "environments": [
     {
@@ -132,7 +132,7 @@ curl https://api.cloco.io/<subscription_id>/applications/<application_id> --head
   "coreDetails": {
     "applicationName": "My-App",
     "description": "This is a description of my app.",
-    "isDefault": "true|false"
+    "isFavorite": "true|false"
   },
   "environments": [
     {
