@@ -6,7 +6,7 @@
 
 Welcome to cloco-docs, the documentation repo for the cloco API.  This is an opensource documentation repo and we welcome contributions from the cloco user community.
 
-The cloco API documentation is published on GitHub pages [https://cloudconfig.github.io/cloco-docs/](https://cloudconfig.github.io/cloco-docs/).
+The cloco API documentation is published at [http://docs.cloco.io](http://docs.cloco.io).
 
 We are keen to build clients to allow easier interaction with cloco more languages, so if you are interested in contributing to a cloco client library and hence to the cloco documentation then please get in contact.
 
