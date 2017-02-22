@@ -3,10 +3,10 @@
 The cloco node client pulls all the configuration for your application from the cloco API and makes it accessible to your application.  In order to use the cloco node client you will need the following:
 
 - A cloco subscription (account).
+- API credentials generated in the cloco admin console.
 - You will have created an application in cloco.
 - You will have uploaded configuration for the application.
-- To use the shell commands you will have downloaded and installed the [cloco-bash](https://github.com/cloudconfig/cloco-bash) shell.
-- You will either have authorized your machine as described above, or you will have generated client credentials.
+- To use the shell commands you will have downloaded and <a href="#install-the-cloco-cli">installed the cloco cli</a>.
 
 For a working example of the cloco node client please see the [cloco-node-example](https://github.com/cloudconfig/cloco-node-example) project on GitHub.
 
@@ -36,7 +36,7 @@ The cloco options are where you configure the settings, and therefore how you co
 
 Parameter | Description | Usage
 --------- | ----------- | -----
-application | The ID of the cloco application. | Optional, but if not supplied this will be taken from the machine default (set via [cloco-bash](https://github.com/cloudconfig/cloco-bash)).
+application | The ID of the cloco application. | Optional, but if not supplied this will be taken from the machine default (set via the cloco cli).
 cacheCheckInterval | The time in milliseconds between checking for expired configuration in the cache. | Optional, defaults to 5000ms.
 credentials | The credentials to use to access cloco. | Optional, but if not supplied will use the machine credentials.  See Credentials section below.
 encryptor | The encryption algorithm. | Optional, by default this will be a passthrough encryptor (i.e. will not encrypt).  See Encryption section below for more information.
@@ -50,38 +50,41 @@ useDiskCaching | Indicates whether disk caching is used. | Optional.  Will defau
 ## Setting the Subscription
 
 ```shell
-cloco --init --sub my-cloco-subscription
+# set the default subscription machine-wide
+cloco init --sub my-cloco-subscription
 ```
 
 ```javascript
 options.subscription = 'my-cloco-subscription';
 ```
 
-You need to specify the identifier of your cloco subscription as the cloco REST API requires this as a URL parameter.  
+You need to specify the identifier of your cloco subscription as the cloco REST API requires this as a URL parameter.  You can set this in the defaults using the cloco cli or pass it into the options.
 
 ## Setting the Application
 
 ```shell
-cloco --init --app my-application
+# set the default application machine-wide
+cloco init --app my-application
 ```
 
 ```javascript
 options.application = 'my-application';
 ```
 
-You need to specify the identifier of your cloco application as the cloco REST API requires this as a URL parameter.  
+You need to specify the identifier of your cloco application as the cloco REST API requires this as a URL parameter.  You can set this in the defaults using the cloco cli or pass it into the options.  
 
 ## Setting the Environment
 
 ```shell
-cloco --init --env dev|test|staging|production
+# set the default environment machine-wide
+cloco init --env dev|test|staging|production
 ```
 
 ```javascript
 options.environment = 'dev'; // this should be configured per environment.
 ```
 
-You need to specify the environment that your application is running in, and the appropriate configuration for the environment will be loaded.  You can have different settings depending on the environment.
+You need to specify the environment that your application is running in, and the appropriate configuration for the environment will be loaded.  You can have different settings depending on the environment.  You can set this in the defaults using the cloco cli or pass it into the options.
 
 <aside class="notice">
 Your DevOps processes can initialize the environment at deployment time using the shell.
@@ -89,21 +92,25 @@ Your DevOps processes can initialize the environment at deployment time using th
 
 ## Setting the Credentials
 
+```shell
+# set the default credentials machine-wide
+cloco init --key <cloco_client_key> --secret <cloco_client_secret>
+```
+
 ```javascript
 // initialize the credentials if supplied via environment variables.
-if (process.env.CLOCO_CLIENT_KEY && process.env.CLOCO_CLIENT_SECRET) {
-  options.credentials = { key: process.env.CLOCO_CLIENT_KEY, secret: process.env.CLOCO_CLIENT_SECRET };
+if (process.env.CLOCO_cloco cliENT_KEY && process.env.CLOCO_cloco cliENT_SECRET) {
+  options.credentials = { key: process.env.CLOCO_cloco cliENT_KEY, secret: process.env.CLOCO_cloco cliENT_SECRET };
 }
 ```
 
-You can authorize a machine using the cloco-auth tool to receive a refresh token, in which case credentials are not required to be passed in the options.
-
-If you have not authorized your machine then you need to pass the credentials to the cloco client, and the client will then obtain an access token from the API.
+If you have not initialized credentials using the cloco cli you will need to pass the credentials to the cloco client, and the client will then obtain an access token from the API.
 
 ## Setting the API URL
 
 ```shell
-cloco --init --url https://my-on-premise-cloco-url
+# set the api url via the cloco cli
+cloco init --url https://my-on-premise-cloco-url
 ```
 
 ```javascript
@@ -186,9 +193,11 @@ options.useDiskCaching = true;
 The cloco client can be used even when access to the cloco API is intermittent or disrupted.  To use this option you should turn on the disk caching option.  Whenever new data is downloaded from the cloco API it will be stored on disk and if the cloco node client is unable to connect to the cloco API the last disk version will be used instead.
 
 ```shell
-cloco --get-app --sub my-cloco-subscription --app my-application > ~/.cloco/cache/application_my-application
+# download the application metadata into the local cache using the cloco cli
+cloco application get --sub my-cloco-subscription --app my-application > ~/.cloco/cache/application_my-application
 
-cloco --get-cob --sub my-cloco-subscription --app my-application --cob my-configuration-object --env dev > ~/.cloco/cache/configuration_my-application_my-configuration-object_dev
+# download the configuration into the local cache using the cloco cli
+cloco configuration get --sub my-cloco-subscription --app my-application --cob my-configuration-object --env dev > ~/.cloco/cache/configuration_my-application_my-configuration-object_dev
 ```
 
 Your DevOps scripts can also prime the client by deploying a version of the configuration onto disk before first use.  In this case you will never need to connect to the API to download the configuration.

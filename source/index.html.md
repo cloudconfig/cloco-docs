@@ -12,7 +12,8 @@ toc_footers:
 
 includes:
   - introduction
-  - installation
+  - getting-started
+  - initialization
   - user-accounts
   - subscription-management
   - application-management

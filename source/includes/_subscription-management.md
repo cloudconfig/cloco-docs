@@ -1,15 +1,14 @@
 # Subscription Management
 
-In cloco a subscription is where a team of people can manage configuration data together.
+A cloco subscription is where a team of people can manage configuration data together.
 
 ##  List Subscriptions
 
-> To list the subscriptions you have access to, use this code:
-
 ```shell
-cloco --list-subs
+# list your subscriptions via the cloco-cli
+cloco subscription list
 
-# Alternatively, use curl:
+# alternatively, use curl:
 curl https://api.cloco.io  --header Content-Type:application/json --header "Authorization:Bearer <token>"
 ```
 
@@ -24,14 +23,13 @@ curl https://api.cloco.io  --header Content-Type:application/json --header "Auth
 
 As a user in cloco you can belong to more than one subscription.  If you are a subscription administrator you can add users to your subscription and create applications, otherwise you will only have privilege to perform the actions allowed by your administrator.
 
-## Create a subscription
-
-> To create a new subscription, use this code:
+## Create a Subscription
 
 ```shell
-cloco --create-sub --sub <subscription_id>
+# create a subscription via the cloco cli
+cloco subscription create --sub <subscription_id>
 
-# Alternatively, use curl:
+# alternatively, use curl:
 curl -X POST https://api.cloco.io/subscription --data $json --header Content-Type:application/json --header "Authorization:Bearer <token>"
 ```
 
@@ -53,37 +51,63 @@ The subscription identifier must be comprised of only letters, numbers and hyphe
 When you create a subscription you will by default be the only user and the subscription administrator.
 </aside>
 
-## Retrieve a subscription
+### Parameters
 
-> To retrieve a subscription, use this code:
+Parameter | Description | Usage
+--------- | ----------- | -----
+sub | The ID of the subscription. | Required.  Must be unique.  If it already exists an error will be raised.
+
+## Retrieve a Subscription
 
 ```shell
-cloco --get-sub --sub <subscription_id>
+# retrieve a subscription using the cloco cli
+cloco subscription get --sub <subscription_id>
 
-# Alternatively, use curl:
+# alternatively, use curl:
 curl https://api.cloco.io/<subscription_id> --header Content-Type:application/json --header "Authorization:Bearer <token>"
 ```
 
 This command retrieves the subscription information.
 
-### URL Parameters
+### Parameters
 
 Parameter | Description | Usage
 --------- | ----------- | -----
-subscription_id | The ID of the subscription. | Optional if defaulted via the --init command
+sub | The ID of the subscription. | Optional if defaulted via the cloco init command.
 
 <aside class="notice">
 Requires subscription admin privilege.
 </aside>
 
-## List Subscription Users
-
-> To list the subscription users, use this code:
+## Delete a Subscription
 
 ```shell
-cloco --list-users --sub <subscription_id>
+# delete a subscription using the cloco cli
+cloco subscription delete --sub <subscription_id>
 
-# Alternatively, use curl:
+# alternatively, use curl:
+curl -X DELETE https://api.cloco.io/<subscription_id> --header Content-Type:application/json --header "Authorization:Bearer <token>"
+```
+
+This command deletes the subscription and all associated data and configuration.
+
+### Parameters
+
+Parameter | Description | Usage
+--------- | ----------- | -----
+sub | The ID of the subscription. | Required.
+
+<aside class="notice">
+Requires subscription admin privilege.
+</aside>
+
+## List Subscription Permissions
+
+```shell
+# list subscription permissions via the cloco cli
+cloco subscription permissions list --sub <subscription_id>
+
+# alternatively, use curl:
 curl https://api.cloco.io/<subscription_id>/permissions --header Content-Type:application/json --header "Authorization:Bearer <token>"
 ```
 
@@ -98,26 +122,25 @@ curl https://api.cloco.io/<subscription_id>/permissions --header Content-Type:ap
 ]
 ```
 
-This command lets you list all of the users that are present in the subscription.
+This command lets you list all of the permissions that are assigned at a subscription level.
 
-### URL Parameters
+### Parameters
 
 Parameter | Description | Usage
 --------- | ----------- | -----
-subscription_id | The ID of the subscription. | Optional if defaulted via the --init command
+sub | The ID of the subscription. | Optional if defaulted via the cloco init command.
 
 <aside class="notice">
 Requires subscription admin privilege.
 </aside>
 
-## Add Subscription User
-
-> To add subscription user, use this code:
+## Create or Update Subscription Permissions
 
 ```shell
-cloco --add-user --sub <subscription_id> -u <username> -r admin|user
+# to create or update subscription permissions using the cloco cli
+cloco subscription permissions create --sub <subscription_id> --username <username> [--admin|--user]
 
-# Alternatively, use curl:
+# alternatively, use curl:
 curl -X POST --data $json https://api.cloco.io/<subscription_id>/permissions --header Content-Type:application/json --header "Authorization:Bearer <token>"
 ```
 
@@ -130,39 +153,40 @@ curl -X POST --data $json https://api.cloco.io/<subscription_id>/permissions --h
 }
 ```
 
-This command lets you add a cloco user to the subscription via their username.  Once the user signs into cloco they will see the subscription in their list of available subscriptions and will be able to use cloco with the required level of privilege.
+This command lets you add a permissions to the subscription for a cloco user via their username.  Once the user signs into cloco they will see the subscription in their list of available subscriptions and will be able to use cloco with the required level of privilege.
 
-A user needs to be added to the subscription before they can be granted permissions on either an application or a configuration object.
+A user needs permissions to be granted on the subscription before they can be granted permissions on either an application or a configuration object.
 
-### URL Parameters
+### Parameters
 
 Parameter | Description | Usage
 --------- | ----------- | -----
-subscription_id | The ID of the subscription. | Optional if defaulted via the --init command
+sub | The ID of the subscription. | Optional if defaulted via the cloco init command.
+username | The username to assign permissions to. | Required.
+admin / user | Flag. The permission level to assign. | Optional, defaults to user.
 
 <aside class="notice">
 Requires subscription admin privilege.
 </aside>
 
-## Remove Subscription User
-
-> To remove a subscription user, use this code:
+## Revoke Subscription Permissions
 
 ```shell
-cloco --rm-user --sub <subscription_id> -u <username>
+# to revoke subscription permissions using the cloco cli
+cloco subscription permissions delete --sub <subscription_id> --username <username>
 
-# Alternatively, use curl:
+# alternatively, use curl:
 curl -X DELETE --data $json https://api.cloco.io/<subscription_id>/permissions/<username> --header Content-Type:application/json --header "Authorization:Bearer <token>"
 ```
 
-This command lets you remove a cloco user from the subscription via their username.  
+This command lets you revoke permissions on the subscription for a cloco user via their username.  
 
-### URL Parameters
+### Parameters
 
 Parameter | Description | Usage
 --------- | ----------- | -----
-subscription_id | The ID of the subscription. | Optional if defaulted via the --init command
-username | The identity of the user to remove.
+sub | The ID of the subscription. | Optional if defaulted via the cloco init command.
+username | The username to revoke permissions from. | Required.
 
 <aside class="warning">
 You cannot remove yourself from the subscription.  If you want to do this you must first ensure another admin is present within the subscription and then get them to remove you.

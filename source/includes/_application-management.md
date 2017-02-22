@@ -4,12 +4,11 @@ Within cloco the data stored for an application is metadata - this helps us mana
 
 ## List Applications
 
-> To list the applications within a subscription, use this code:
-
 ```shell
-cloco --list-apps --sub <subscription_id>
+# list applications in a subscription using the cloco cli
+cloco application list --sub <subscription_id>
 
-# Alternatively, use curl:
+# alternatively, use curl:
 curl https://api.cloco.io/<subscription_id>/applications  --header Content-Type:application/json --header "Authorization:Bearer <token>"
 ```
 
@@ -46,11 +45,11 @@ curl https://api.cloco.io/<subscription_id>/applications  --header Content-Type:
 
 This command retrieves all of the application metadata within the subscription.  Note that no configuration data is retrieved, but lists of the available configuration objects and environments are returned, along with the application identifier and summary information about the application.
 
-### URL Parameters
+### Parameters
 
 Parameter | Description | Usage
 --------- | ----------- | -----
-subscription_id | The ID of the subscription. | Optional if defaulted via the --init command
+sub | The ID of the subscription. | Optional if defaulted via the cloco init command.
 
 <aside class="notice">
 Requires subscription admin privilege.
@@ -58,12 +57,11 @@ Requires subscription admin privilege.
 
 ## Save Application
 
-> To save application metadata within a subscription, use this code:
-
 ```shell
-cloco --save-app --sub <subscription_id> --app <application_id> --file <path_to_json_file>
+# to save application metadata using the cloco cli
+cloco application put --sub <subscription_id> --app <application_id> --filename <path_to_json_file>
 
-# Alternatively, use curl:
+# alternatively, use curl:
 curl -X PUT --data @<path_to_json_file> https://api.cloco.io/<subscription_id>/applications/<application_id> --header Content-Type:application/json --header "Authorization:Bearer <token>"
 ```
 
@@ -102,12 +100,13 @@ This command stores the application metadata in the subscription.  This command 
 Note that subscription limits on number of applications, number of configuration objects and number of environments will be evaluated when the application data is received, and if these exceed the subscription limits an error will be returned.
 </aside>
 
-### URL Parameters
+### Parameters
 
 Parameter | Description | Usage
 --------- | ----------- | -----
-subscription_id | The ID of the subscription. | Optional if defaulted via the --init command
-application_id | The ID of the application. | Optional if defaulted via the --init command
+sub | The ID of the subscription. | Optional if defaulted via the cloco init command.
+app | The ID of the application. | Optional if defaulted via the cloco init command.
+filename | Path to a JSON document containing the metadata. | Required.
 
 <aside class="notice">
 Requires subscription admin privilege.
@@ -115,12 +114,11 @@ Requires subscription admin privilege.
 
 ## Retrieve an Application
 
-> To retrieve an application, use this code:
-
 ```shell
-cloco --get-app --sub <subscription_id> --app <application_id>
+# retrieve an application using the cloco cli
+cloco application get --sub <subscription_id> --app <application_id>
 
-# Alternatively, use curl:
+# alternatively, use curl:
 curl https://api.cloco.io/<subscription_id>/applications/<application_id> --header Content-Type:application/json --header "Authorization:Bearer <token>"
 ```
 
@@ -155,12 +153,12 @@ curl https://api.cloco.io/<subscription_id>/applications/<application_id> --head
 
 This command retrieves the application information.
 
-### URL Parameters
+### Parameters
 
 Parameter | Description | Usage
 --------- | ----------- | -----
-subscription_id | The ID of the subscription. | Optional if defaulted via the --init command
-application_id | The ID of the application. | Optional if defaulted via the --init command
+sub | The ID of the subscription. | Optional if defaulted via the cloco init command.
+app | The ID of the application. | Optional if defaulted via the cloco init command.
 
 <aside class="notice">
 Requires subscription admin privilege or application admin privilege.
@@ -168,36 +166,34 @@ Requires subscription admin privilege or application admin privilege.
 
 ## Delete an Application
 
-> To delete an application, use this code:
-
 ```shell
-cloco --rm-app --sub <subscription_id> --app <application_id>
+# delete an application using the cloco cli
+cloco application delete --sub <subscription_id> --app <application_id>
 
-# Alternatively, use curl:
+# alternatively, use curl:
 curl -X DELETE https://api.cloco.io/<subscription_id>/applications/<application_id> --header Content-Type:application/json --header "Authorization:Bearer <token>"
 ```
 
 This command deletes the application and any associated configuration stored within cloco.
 
-### URL Parameters
+### Parameters
 
 Parameter | Description | Usage
 --------- | ----------- | -----
-subscription_id | The ID of the subscription. | Optional if defaulted via the --init command
-application_id | The ID of the application. | Optional if defaulted via the --init command
+sub | The ID of the subscription. | Optional if defaulted via the cloco init command.
+app | The ID of the application. | Optional if defaulted via the cloco init command.
 
 <aside class="notice">
 Requires subscription admin privilege or application admin privilege.
 </aside>
 
-## List Application Users
-
-> To list the application users, use this code:
+## List Application Permissions
 
 ```shell
-cloco --list-app-users --sub <subscription_id> --app <application_id>
+# list the application-level permissions via the cloco cli
+cloco application permissions list --sub <subscription_id> --app <application_id>
 
-# Alternatively, use curl:
+# alternatively, use curl:
 curl https://api.cloco.io/<subscription_id>/applications/<application_id>/permissions --header Content-Type:application/json --header "Authorization:Bearer <token>"
 ```
 
@@ -212,27 +208,26 @@ curl https://api.cloco.io/<subscription_id>/applications/<application_id>/permis
 ]
 ```
 
-This command lets you list all of the users that are presently assigned to the application.
+This command lets you list all of the permissions that are presently assigned at the application level.
 
-### URL Parameters
+### Parameters
 
 Parameter | Description | Usage
 --------- | ----------- | -----
-subscription_id | The ID of the subscription. | Optional if defaulted via the --init command
-application_id | The ID of the application. | Optional if defaulted via the --init command
+sub | The ID of the subscription. | Optional if defaulted via the cloco init command.
+app | The ID of the application. | Optional if defaulted via the cloco init command.
 
 <aside class="notice">
 Requires subscription admin privilege or application admin privilege.
 </aside>
 
-## Add Application User
-
-> To add an application user, use this code:
+## Create or Update Application Permissions
 
 ```shell
-cloco --add-app-user --sub <subscription_id> --app <application_id> -u <username>
+# to modify application permissions using the cloco cli
+cloco application permissions create --sub <subscription_id> --app <application_id> --username <username>
 
-# Alternatively, use curl:
+# alternatively, use curl:
 curl -X POST --data $json https://api.cloco.io/<subscription_id>/applications/<application_id>/permissions --header Content-Type:application/json --header "Authorization:Bearer <token>"
 ```
 
@@ -247,37 +242,38 @@ curl -X POST --data $json https://api.cloco.io/<subscription_id>/applications/<a
 
 This command lets you add a cloco user to the application via their username.  A user added as an application user will be able to list applications they have admin rights to view.
 
-### URL Parameters
+### Parameters
 
 Parameter | Description | Usage
 --------- | ----------- | -----
-subscription_id | The ID of the subscription. | Optional if defaulted via the --init command
-application_id | The ID of the application. | Optional if defaulted via the --init command
+sub | The ID of the subscription. | Optional if defaulted via the cloco init command.
+app | The ID of the application. | Optional if defaulted via the cloco init command.
+username | The username to assign permissions to. | Required.
 
 <aside class="notice">
 Requires subscription admin privilege or application admin privilege.
 </aside>
 
-## Remove Application User
+## Revoke Application Permissions
 
 > To remove an application user, use this code:
 
 ```shell
-cloco --rm-app-user --sub <subscription_id> --app <application_id> -u <username>
+cloco application permissions delete --sub <subscription_id> --app <application_id> --username <username>
 
-# Alternatively, use curl:
+# alternatively, use curl:
 curl -X DELETE --data $json https://api.cloco.io/<subscription_id>/applications/<application_id>/permissions/<username> --header Content-Type:application/json --header "Authorization:Bearer <token>"
 ```
 
-This command lets you remove a cloco user from the application via their username.  
+This command lets you revoke permissions on the application via their user's username.  
 
-### URL Parameters
+### Parameters
 
 Parameter | Description | Usage
 --------- | ----------- | -----
-subscription_id | The ID of the subscription. | Optional if defaulted via the --init command
-application_id | The ID of the application. | Optional if defaulted via the --init command
-username | The identity of the user to remove.
+sub | The ID of the subscription. | Optional if defaulted via the cloco init command.
+app | The ID of the application. | Optional if defaulted via the cloco init command.
+username | The username to revoke permissions from. | Required.
 
 <aside class="warning">
 You cannot remove yourself from the application.  If you want to do this you must first ensure another admin is present within the application and then get them to remove you.

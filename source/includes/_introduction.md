@@ -20,7 +20,7 @@ cloco is all about providing a configuration service for applications.  When you
 
 ### Environments
 
-cloco is designed to be a single configuratiuon service that you can use to stage your configuration across several environments.  You only need one cloco, as we allow you to store a separate instance of your configuration for each environment.  By default we recommend four environments: dev, test, staging and production.
+cloco is designed to be a single configuration service that you can use to stage your configuration across several environments.  You only need one cloco, as we allow you to store a separate instance of your configuration for each environment.  By default we recommend four environments: dev, test, staging and production.
 
 ### Configuration Objects
 
