@@ -145,6 +145,9 @@ In these examples the subscription, application and environment have all been se
 
     `$ cloco init --sub subscription --app application --env environment`
 
+<aside class="warning">
+It is your responsibility to encrypt your configuration before you send it to cloco.  Please keep your encryption keys safe - if you lose them we will not be able to recover your data for you.
+</aside>
 
 ## List Configuration Versions
 
