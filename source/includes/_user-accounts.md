@@ -26,9 +26,20 @@ cloco credentials list
 curl https://api.cloco.io/user/credentials  --header Content-Type:application/json --header "Authorization:Bearer <token>"
 ```
 
-You can list your API credentials that are stored in cloco.  Note that you only get to see the client secret when the credentials are generated.  After this all you can see if the client key.
+> The above curl command returns JSON structured like this:
 
-## Create API Credentials
+```json
+[
+    {
+        "generated": "2017-03-03T17:41:58.524Z",
+        "key": "9f11a85e648c357c93525a57304cac9646317af8"
+    }
+]
+```
+
+You can list your API credentials that are stored in cloco.  Note that you only get to see the client secret when the credentials are generated.  After this all you can see is the client key.
+
+## Generate API Credentials
 
 ```shell
 # create api credentials vla the cli
@@ -43,6 +54,16 @@ curl -X POST --data $json https://api.cloco.io/user/credentials --header Content
 ```json
 {
   "grant_type": "client_credentials"
+}
+```
+
+> The above curl command returns JSON structured like this:
+
+```json
+{
+    "generated": "2017-03-03T17:41:58.524Z",
+    "key": "9f11a85e648c357c93525a57304cac9646317af8",
+    "secret": "5c382f50c9632eee4b8a86ec98ae800eb7111a4a"
 }
 ```
 

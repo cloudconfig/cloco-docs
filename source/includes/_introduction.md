@@ -26,9 +26,21 @@ cloco is designed to be a single configuration service that you can use to stage
 
 In cloco, configuration objects represent the data that your application will need in order to configure itself.  We don't need to know - or care - what your configuration data is, we just store it in the database in the most appropriate way.
 
-## Permissions
+## Security
 
-Permissions are granted by the subscription administrator(s) to other users in the subscription.  Each user can only perform the actions allowed by the administrator.  The most granular permission is to read a single piece of configuration in a single environment.
+### Users
+
+In cloco, users are authenticated by an OAuth provider.  The launch version of cloco supports GitHub authentication but others will follow.  When you authenticate you will be registered in cloco as a user and you will have a personal subscription created for you.
+
+### Clients
+
+cloco is designed for machine access, and so we advise you not to use your administrator credentials for applications that only need to read or write configuration data.  You can create 'clients' in cloco to act as service accounts.  These behave in the same way as users, but they are not authenticated by an OAuth provider.  We recommend that you create clients for each application and assign minimum permissions as appropriate.
+
+A notable difference between clients and users is this:  clients are scoped to a subscription only and cannot be shared across subscriptions.  Users are authenticated people and can access more than one subscription.
+
+### Permissions
+
+Permissions are granted by the subscription administrator(s) to other users in the subscription.  Each user or client can only perform the actions allowed by the administrator.  The most granular permission is to read a single piece of configuration in a single environment.
 
 ## Encryption
 

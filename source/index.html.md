@@ -16,6 +16,7 @@ includes:
   - initialization
   - user-accounts
   - subscription-management
+  - clients
   - application-management
   - configuration-objects
   - errors
