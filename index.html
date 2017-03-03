@@ -150,9 +150,21 @@
 
 <p>In cloco, configuration objects represent the data that your application will need in order to configure itself.  We don&rsquo;t need to know - or care - what your configuration data is, we just store it in the database in the most appropriate way.</p>
 
-<h2 id="permissions">Permissions</h2>
+<h2 id="security">Security</h2>
 
-<p>Permissions are granted by the subscription administrator(s) to other users in the subscription.  Each user can only perform the actions allowed by the administrator.  The most granular permission is to read a single piece of configuration in a single environment.</p>
+<h3 id="users">Users</h3>
+
+<p>In cloco, users are authenticated by an OAuth provider.  The launch version of cloco supports GitHub authentication but others will follow.  When you authenticate you will be registered in cloco as a user and you will have a personal subscription created for you.</p>
+
+<h3 id="clients">Clients</h3>
+
+<p>cloco is designed for machine access, and so we advise you not to use your administrator credentials for applications that only need to read or write configuration data.  You can create &lsquo;clients&rsquo; in cloco to act as service accounts.  These behave in the same way as users, but they are not authenticated by an OAuth provider.  We recommend that you create clients for each application and assign minimum permissions as appropriate.</p>
+
+<p>A notable difference between clients and users is this:  clients are scoped to a subscription only and cannot be shared across subscriptions.  Users are authenticated people and can access more than one subscription.</p>
+
+<h3 id="permissions">Permissions</h3>
+
+<p>Permissions are granted by the subscription administrator(s) to other users in the subscription.  Each user or client can only perform the actions allowed by the administrator.  The most granular permission is to read a single piece of configuration in a single environment.</p>
 
 <h2 id="encryption">Encryption</h2>
 
@@ -346,9 +358,20 @@ cloco credentials list
 curl https://api.cloco.io/user/credentials  --header Content-Type:application/json --header <span class="s2">"Authorization:Bearer &lt;token&gt;"</span>
 </code></pre>
 
-<p>You can list your API credentials that are stored in cloco.  Note that you only get to see the client secret when the credentials are generated.  After this all you can see if the client key.</p>
+<blockquote>
+<p>The above curl command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"generated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-03-03T17:41:58.524Z"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"9f11a85e648c357c93525a57304cac9646317af8"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre>
 
-<h2 id="create-api-credentials">Create API Credentials</h2>
+<p>You can list your API credentials that are stored in cloco.  Note that you only get to see the client secret when the credentials are generated.  After this all you can see is the client key.</p>
+
+<h2 id="generate-api-credentials">Generate API Credentials</h2>
 <pre class="highlight shell"><code><span class="c"># create api credentials vla the cli</span>
 cloco credentials create
 
@@ -361,6 +384,16 @@ curl -X POST --data <span class="nv">$json</span> https://api.cloco.io/user/cred
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
   </span><span class="nt">"grant_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"client_credentials"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<blockquote>
+<p>The above curl command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"generated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-03-03T17:41:58.524Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"9f11a85e648c357c93525a57304cac9646317af8"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"secret"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5c382f50c9632eee4b8a86ec98ae800eb7111a4a"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 
@@ -681,6 +714,264 @@ curl -X DELETE --data <span class="nv">$json</span> https://api.cloco.io/&lt;sub
 <aside class="warning">
 You cannot remove yourself from the subscription.  If you want to do this you must first ensure another admin is present within the subscription and then get them to remove you.
 </aside>
+
+<aside class="notice">
+Requires subscription admin privilege.
+</aside>
+
+          <h1 id="clients">Clients</h1>
+
+<p>In cloco a client is analogous to a service account.  This is an account that a machine would use to access cloco and would not be expected to be available to an interactive user.</p>
+
+<p>A client is scoped to a subscription, and each client you create counts towards the user limit in the subscription.</p>
+
+<p>Once you have created a client you will need to generate credentials for that client to be able to access cloco.</p>
+
+<h2 id="list-clients">List Clients</h2>
+<pre class="highlight shell"><code><span class="c"># list subscription clients via the cloco cli</span>
+cloco subscription clients list --sub &lt;subscription_id&gt;
+
+<span class="c"># alternatively, use curl:</span>
+curl https://api.cloco.io/&lt;subscription_id&gt;/clients --header Content-Type:application/json --header <span class="s2">"Authorization:Bearer &lt;token&gt;"</span>
+</code></pre>
+
+<blockquote>
+<p>The above command returns JSON array structured like this:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">[</span><span class="w">
+  </span><span class="s2">"client-1"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"client-2"</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre>
+
+<p>This command lets you list all of the clients that have been created in the subscription.</p>
+
+<h3 id="parameters">Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Usage</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>sub</td>
+<td>The ID of the subscription.</td>
+<td>Optional if defaulted via the cloco init command.</td>
+</tr>
+</tbody></table>
+
+<aside class="notice">
+Requires subscription admin privilege.
+</aside>
+
+<h2 id="create-or-update-clients">Create or Update Clients</h2>
+<pre class="highlight shell"><code><span class="c"># to create a client within the subscription using the cloco cli</span>
+cloco subscription client create --sub &lt;subscription_id&gt; --name &lt;name&gt;
+
+<span class="c"># alternatively, use curl:</span>
+curl -X PUT --data <span class="nv">$json</span> https://api.cloco.io/&lt;subscription_id&gt;/clients/&lt;name&gt; --header Content-Type:application/json --header <span class="s2">"Authorization:Bearer &lt;token&gt;"</span>
+</code></pre>
+
+<p>This command lets you add a client to the subscription for a cloco user and give them a name.  The client will have access to the subscription as a basic user and must be assigned further clients to be able to access any configuration.</p>
+
+<h3 id="parameters">Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Usage</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>sub</td>
+<td>The ID of the subscription.</td>
+<td>Optional if defaulted via the cloco init command.</td>
+</tr>
+<tr>
+<td>name</td>
+<td>The name of the client.</td>
+<td>Required.</td>
+</tr>
+</tbody></table>
+
+<aside class="notice">
+Requires subscription admin privilege.
+</aside>
+
+<h2 id="delete-subscription-client">Delete Subscription client</h2>
+<pre class="highlight shell"><code><span class="c"># to delete a client from the subscription using the cloco cli</span>
+cloco subscription client delete --sub &lt;subscription_id&gt; --name &lt;name&gt;
+
+<span class="c"># alternatively, use curl:</span>
+curl -X DELETE --data <span class="nv">$json</span> https://api.cloco.io/&lt;subscription_id&gt;/clients/&lt;name&gt; --header Content-Type:application/json --header <span class="s2">"Authorization:Bearer &lt;token&gt;"</span>
+</code></pre>
+
+<p>This command lets you delete the client from the subscription via their name.  </p>
+
+<h3 id="parameters">Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Usage</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>sub</td>
+<td>The ID of the subscription.</td>
+<td>Optional if defaulted via the cloco init command.</td>
+</tr>
+<tr>
+<td>name</td>
+<td>The name of the client.</td>
+<td>Required.</td>
+</tr>
+</tbody></table>
+
+<aside class="notice">
+Requires subscription admin privilege.
+</aside>
+
+<h2 id="list-client-credentials">List Client Credentials</h2>
+<pre class="highlight shell"><code><span class="c"># list the credentials for a client</span>
+cloco subscription client credentials list --sub &lt;subscription_id&gt; --name &lt;name&gt;
+
+<span class="c"># via curl:</span>
+curl https://api.cloco.io/&lt;subscription_id&gt;/clients/&lt;name&gt;/credentials  --header Content-Type:application/json --header <span class="s2">"Authorization:Bearer &lt;token&gt;"</span>
+</code></pre>
+
+<blockquote>
+<p>The above curl command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"generated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-03-03T17:41:58.524Z"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"9f11a85e648c357c93525a57304cac9646317af8"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre>
+
+<p>You can list the credentials for a client.  Note that you only get to see the client secret when the credentials are generated.  After this all you can see is the client key.</p>
+
+<h3 id="parameters">Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Usage</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>sub</td>
+<td>The ID of the subscription.</td>
+<td>Optional if defaulted via the cloco init command.</td>
+</tr>
+<tr>
+<td>name</td>
+<td>The name of the client.</td>
+<td>Required.</td>
+</tr>
+</tbody></table>
+
+<aside class="notice">
+Requires subscription admin privilege.
+</aside>
+
+<h2 id="generate-client-credentials">Generate Client Credentials</h2>
+<pre class="highlight shell"><code><span class="c"># create api credentials vla the cli</span>
+cloco subscription client credentials create --sub &lt;subscription_id&gt; --name &lt;name&gt;
+
+<span class="c"># via curl:</span>
+curl -X POST --data <span class="nv">$json</span> https://api.cloco.io/&lt;subscription_id&gt;/clients/&lt;name&gt;/credentials --header Content-Type:application/json --header <span class="s2">"Authorization:Bearer &lt;token&gt;"</span>
+</code></pre>
+
+<blockquote>
+<p>The above curl command requires JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"grant_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"client_credentials"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<blockquote>
+<p>The above curl command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"generated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-03-03T17:41:58.524Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"9f11a85e648c357c93525a57304cac9646317af8"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"secret"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5c382f50c9632eee4b8a86ec98ae800eb7111a4a"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>You can use client credentials with the cloco cli and with the cloco node client.  We recommend you generate different credentials for every environment or service using cloco, and permission them accordingly.  </p>
+
+<p>When credentials are generated we return the client key and the client secret.  The client secret will never be returned to you again, so if you lose it you will need to generate fresh credentials.</p>
+
+<h3 id="parameters">Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Usage</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>sub</td>
+<td>The ID of the subscription.</td>
+<td>Optional if defaulted via the cloco init command.</td>
+</tr>
+<tr>
+<td>name</td>
+<td>The name of the client.</td>
+<td>Required.</td>
+</tr>
+</tbody></table>
+
+<aside class="notice">
+Requires subscription admin privilege.
+</aside>
+
+<h2 id="revoke-client-credentials">Revoke Client Credentials</h2>
+<pre class="highlight shell"><code><span class="c"># delete api credentials via the cli</span>
+cloco subscription client credentials delete --sub &lt;subscription_id&gt; --name &lt;name&gt; --key &lt;cloco_client_key&gt;
+
+<span class="c"># via curl:</span>
+curl -X DELETE https://api.cloco.io/&lt;subscription_id&gt;/clients/&lt;name&gt;/credentials/&lt;key&gt; --header Content-Type:application/json --header <span class="s2">"Authorization:Bearer &lt;token&gt;"</span>
+</code></pre>
+
+<p>If you feel your credentials may have been compromised, or you no longer need them, revoke them as shown.</p>
+
+<h3 id="parameters">Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Usage</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>sub</td>
+<td>The ID of the subscription.</td>
+<td>Optional if defaulted via the cloco init command.</td>
+</tr>
+<tr>
+<td>name</td>
+<td>The name of the client.</td>
+<td>Required.</td>
+</tr>
+<tr>
+<td>key</td>
+<td>The client key from the client credentials.</td>
+<td>Required.</td>
+</tr>
+</tbody></table>
 
 <aside class="notice">
 Requires subscription admin privilege.
