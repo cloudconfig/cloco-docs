@@ -1262,7 +1262,7 @@ Requires subscription admin privilege or application admin privilege.
 
 <h2 id="create-or-update-application-permissions">Create or Update Application Permissions</h2>
 <pre class="highlight shell"><code><span class="c"># to modify application permissions using the cloco cli</span>
-cloco application permissions create --sub &lt;subscription_id&gt; --app &lt;application_id&gt; --username &lt;username&gt;
+cloco application permissions create --sub &lt;subscription_id&gt; --app &lt;application_id&gt; --username &lt;username&gt; <span class="o">[</span>--admin|--read]
 
 <span class="c"># alternatively, use curl:</span>
 curl -X POST --data <span class="nv">$json</span> https://api.cloco.io/&lt;subscription_id&gt;/applications/&lt;application_id&gt;/permissions --header Content-Type:application/json --header <span class="s2">"Authorization:Bearer &lt;token&gt;"</span>
@@ -1273,11 +1273,15 @@ curl -X POST --data <span class="nv">$json</span> https://api.cloco.io/&lt;subsc
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
   </span><span class="nt">"identity"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;username&gt;"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"permissionLevel"</span><span class="p">:</span><span class="w"> </span><span class="s2">"admin|user"</span><span class="w">
+  </span><span class="nt">"permissionLevel"</span><span class="p">:</span><span class="w"> </span><span class="s2">"admin|read"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 
-<p>This command lets you add a cloco user to the application via their username.  A user added as an application user will be able to list applications they have admin rights to view.</p>
+<p>This command lets you add a cloco user to the application via their username.  </p>
+
+<p>A user granted read rights on the application will be able to read the application information but make no changes to it.</p>
+
+<p>A user granted admin permissions on the application can change application permissions and has write access to the application metadata.</p>
 
 <h3 id="parameters">Parameters</h3>
 
@@ -1302,6 +1306,11 @@ curl -X POST --data <span class="nv">$json</span> https://api.cloco.io/&lt;subsc
 <td>username</td>
 <td>The username to assign permissions to.</td>
 <td>Required.</td>
+</tr>
+<tr>
+<td>admin / read</td>
+<td>Flag. The permission level to assign.</td>
+<td>Optional, defaults to read.</td>
 </tr>
 </tbody></table>
 
