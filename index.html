@@ -1566,10 +1566,10 @@ Requires read or write permission as a configuration object user, else subscript
 <span class="nv">CLOCO_ENCRYPTION_KEY</span><span class="o">=</span><span class="s2">"enter your encryption key here"</span>
 <span class="nv">FILENAME</span><span class="o">=</span><span class="s2">"enter the path to the file you wish to upload"</span>
 <span class="nv">CONFIG_OBJECT</span><span class="o">=</span><span class="s2">"your configuration object identifier"</span>
-cloco configuration put --cob <span class="nv">$CONFIG_OBJECT</span> --data <span class="k">$(</span>openssl enc -aes256 -a -A -nosalt -in <span class="nv">$FILENAME</span> -k <span class="nv">$CLOCO_ENCRYPTION_KEY</span><span class="k">)</span>
+cloco configuration put --cob <span class="nv">$CONFIG_OBJECT</span> --data <span class="k">$(</span>openssl enc -aes256 -a -A -pass pass:<span class="nv">$CLOCO_ENCRYPTION_KEY</span> -in <span class="nv">$FILENAME</span><span class="k">)</span>
 </code></pre>
 <pre class="highlight shell"><code><span class="c"># to download and decrypt data using openssl and the cloco cli</span>
-cloco configuration get --cob <span class="nv">$CONFIG_OBJECT</span> --raw  | openssl enc -aes256 -d -a -nosalt -k <span class="nv">$CLOCO_ENCRYPTION_KEY</span>
+cloco configuration get --cob <span class="nv">$CONFIG_OBJECT</span> --raw  | openssl enc -aes256 -d -a -A -pass pass:<span class="nv">$CLOCO_ENCRYPTION_KEY</span>
 </code></pre>
 
 <p>We have designed cloco to be a secure configuration store.  However, we advise you to encrypt your configuration data before sending it to cloco, and to decrypt your data after downloading it.  In this section we provide examples on how you can encrypt and decrypt your data, but treat these as an illustration only.  Make sure you understand your encryption and choose the algorithm(s) most suited to your needs.</p>
