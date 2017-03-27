@@ -225,7 +225,7 @@ Requires subscription admin privilege or application admin privilege.
 
 ```shell
 # to modify application permissions using the cloco cli
-cloco application permissions create --sub <subscription_id> --app <application_id> --username <username>
+cloco application permissions create --sub <subscription_id> --app <application_id> --username <username> [--admin|--read]
 
 # alternatively, use curl:
 curl -X POST --data $json https://api.cloco.io/<subscription_id>/applications/<application_id>/permissions --header Content-Type:application/json --header "Authorization:Bearer <token>"
@@ -236,11 +236,15 @@ curl -X POST --data $json https://api.cloco.io/<subscription_id>/applications/<a
 ```json
 {
   "identity": "<username>",
-  "permissionLevel": "admin|user"
+  "permissionLevel": "admin|read"
 }
 ```
 
-This command lets you add a cloco user to the application via their username.  A user added as an application user will be able to list applications they have admin rights to view.
+This command lets you add a cloco user to the application via their username.  
+
+A user granted read rights on the application will be able to read the application information but make no changes to it.
+
+A user granted admin permissions on the application can change application permissions and has write access to the application metadata.
 
 ### Parameters
 
@@ -249,6 +253,7 @@ Parameter | Description | Usage
 sub | The ID of the subscription. | Optional if defaulted via the cloco init command.
 app | The ID of the application. | Optional if defaulted via the cloco init command.
 username | The username to assign permissions to. | Required.
+admin / read | Flag. The permission level to assign. | Optional, defaults to read.
 
 <aside class="notice">
 Requires subscription admin privilege or application admin privilege.
